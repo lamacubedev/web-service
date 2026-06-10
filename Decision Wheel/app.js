@@ -31,7 +31,7 @@ const COPY = {
     brand: "Menu Rush", navHow: "기능 소개", navAbout: "사이트 소개", navPrivacy: "개인정보처리방침", languageLabel: "언어",
     heroTitle: "오늘 뭐 먹지?",
     heroDescription: "선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
-    spinButton: "메뉴 시작", shuffleButton: "새 후보 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
+    spinButton: "추천 시작", shuffleButton: "메뉴 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
     shareButton: "결과 공유", copyButton: "링크 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "링크와 추천 결과를 복사했습니다.", sharePrompt: "오늘 뭐 먹지? Menu Rush가 {dish}을(를) 골랐어요!",
     howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "시간대 기반 추천", feature1Text: "브라우저의 시간대 정보를 활용해 현재 시각에 어울리는 식사 구간을 자동으로 선택합니다.",
     feature2Title: "40개 국가별 현지 메뉴", feature2Text: "국가를 바꾸면 식사 시간뿐 아니라 추천 후보도 해당 지역의 대표 음식으로 즉시 변경됩니다.",
@@ -51,7 +51,7 @@ const COPY = {
     brand: "Menu Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
     heroTitle: "What should I eat today?",
     heroDescription: "Menu Rush uses the selected country's local foods and meal schedule to suggest what fits now. Choose a meal period or mix every menu.",
-    spinButton: "Start menu rush", shuffleButton: "Shuffle picks", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
+    spinButton: "Start recommendation", shuffleButton: "Shuffle menus", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
     shareButton: "Share result", copyButton: "Copy link", shareSuccess: "The share menu is open.", copySuccess: "Link and result copied.", sharePrompt: "What should I eat today? Menu Rush picked {dish}!",
     howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Time-aware picks", feature1Text: "Browser time-zone information automatically selects a suitable meal period.",
     feature2Title: "Local menus from 40 countries", feature2Text: "Changing the country instantly changes both meal times and candidates to representative local foods.",
@@ -149,7 +149,7 @@ const DISH_TRANSLATIONS = {
   },
 };
 
-const TRANSLATION_CACHE_VERSION = "v4";
+const TRANSLATION_CACHE_VERSION = "v5";
 const TRANSLATION_SEPARATOR = "\n[[[MENU_RUSH_SPLIT]]]\n";
 const API_LANGUAGE_CODES = { zh: "zh-CN", he: "iw" };
 const dishTranslationsByLocale = new Map();
@@ -267,9 +267,11 @@ const elements = {
   machine: document.querySelector("#slotMachine"),
   machineCountry: document.querySelector("#machineCountry"),
   machineStatus: document.querySelector("#machineStatus"),
+  previous2: document.querySelector("#slotPrevious2"),
   previous: document.querySelector("#slotPrevious"),
   current: document.querySelector("#slotCurrent"),
   next: document.querySelector("#slotNext"),
+  next2: document.querySelector("#slotNext2"),
   countryPicker: document.querySelector("#countryPicker"),
   countryTrigger: document.querySelector("#countryTrigger"),
   countryTriggerLabel: document.querySelector("#countryTriggerLabel"),
@@ -387,14 +389,36 @@ function localizedCountryName(code) {
   }
 }
 
+function fitText(element) {
+  if (!element || !element.clientWidth) return;
+  element.style.fontSize = "";
+  const maximum = Number.parseFloat(getComputedStyle(element).fontSize);
+  const minimum = Number(element.dataset.fitMin || 14);
+  let size = maximum;
+  while (element.scrollWidth > element.clientWidth && size > minimum) {
+    size -= 1;
+    element.style.fontSize = `${size}px`;
+  }
+}
+
+function fitVisibleText() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll("[data-fit-text]").forEach(fitText);
+  });
+}
+
 function renderSlotPreview() {
   const items = state.items.length ? state.items : Object.values(CULTURES[state.culture].menus).flat();
-  elements.previous.textContent = displayDish(items[0] || "-");
-  elements.current.textContent = displayDish(items[1] || items[0] || "-");
-  elements.next.textContent = displayDish(items[2] || items[0] || "-");
+  const fallback = items[0] || "-";
+  elements.previous2.textContent = displayDish(items[0] || fallback);
+  elements.previous.textContent = displayDish(items[1] || fallback);
+  elements.current.textContent = displayDish(items[2] || fallback);
+  elements.next.textContent = displayDish(items[3] || fallback);
+  elements.next2.textContent = displayDish(items[4] || fallback);
   const culture = CULTURES[state.culture];
   elements.machineCountry.textContent = `${culture.flag} ${localizedCountryName(state.culture)}`;
   elements.machineStatus.textContent = `${t("ready")} · ${t("candidateCount", { count: state.items.length })}`;
+  fitVisibleText();
 }
 
 function renderTagCloud() {
@@ -464,8 +488,7 @@ function clearImageResults(messageKey = "imageEmpty") {
 }
 
 async function searchMenuImages(rawDish) {
-  const culture = CULTURES[state.culture];
-  const query = `${displayDish(rawDish)} ${localizedCountryName(state.culture)} food`;
+  const query = displayDish(rawDish).trim();
   const config = window.MENU_RUSH_IMAGE_SEARCH || {};
   if (!config.proxyEndpoint) {
     clearImageResults("imageUnavailable");
@@ -511,7 +534,14 @@ async function searchMenuImages(rawDish) {
       link.appendChild(provider);
       elements.imageGrid.appendChild(link);
     }
-    elements.imageStatus.textContent = images.length ? "" : t("imageError");
+    const unavailableProviders = Object.entries(payload.providers || {})
+      .filter(([, provider]) => provider.configured && provider.count === 0)
+      .map(([name, provider]) => provider.status && provider.status !== 200
+        ? `${name} (${provider.status})`
+        : `${name}: 0`);
+    elements.imageStatus.textContent = images.length
+      ? unavailableProviders.length ? `${unavailableProviders.join(", ")}: 0` : ""
+      : t("imageError");
   } catch (error) {
     console.warn("Stock image search unavailable.", error);
     clearImageResults("imageError");
@@ -596,14 +626,18 @@ function updateInsight() {
 function setSlotTexts(centerIndex) {
   const items = state.items;
   const length = items.length;
+  elements.previous2.textContent = displayDish(items[(centerIndex - 2 + length) % length]);
   elements.previous.textContent = displayDish(items[(centerIndex - 1 + length) % length]);
   elements.current.textContent = displayDish(items[centerIndex % length]);
   elements.next.textContent = displayDish(items[(centerIndex + 1) % length]);
-  for (const reel of [elements.previous, elements.current, elements.next]) {
+  elements.next2.textContent = displayDish(items[(centerIndex + 2) % length]);
+  const reels = [elements.previous2, elements.previous, elements.current, elements.next, elements.next2];
+  for (const reel of reels) {
     reel.classList.add("is-ticking");
   }
+  fitVisibleText();
   requestAnimationFrame(() => {
-    for (const reel of [elements.previous, elements.current, elements.next]) {
+    for (const reel of reels) {
       reel.classList.remove("is-ticking");
     }
   });
@@ -642,6 +676,7 @@ async function runMenuMachine() {
     const winningDish = state.items[winnerIndex];
     elements.resultText.textContent = displayDish(winningDish);
     elements.resultText.dataset.dish = winningDish;
+    fitVisibleText();
     elements.shareButton.disabled = false;
     searchMenuImages(winningDish);
     elements.machineStatus.textContent = t("done");
@@ -681,6 +716,7 @@ function applyTranslations() {
   }
   renderTagCloud();
   updateInsight();
+  fitVisibleText();
 }
 
 async function translateCurrentCulture() {
@@ -697,6 +733,7 @@ async function translateCurrentCulture() {
     renderTagCloud();
     if (elements.resultText.dataset.dish) {
       elements.resultText.textContent = displayDish(elements.resultText.dataset.dish);
+      fitVisibleText();
     }
   } catch (error) {
     console.warn("Menu translation unavailable.", error);
@@ -776,6 +813,7 @@ function applySharedState() {
     elements.resultText.textContent = displayDish(dish);
     elements.resultText.dataset.dish = dish;
     elements.shareButton.disabled = false;
+    fitVisibleText();
   }
 }
 
@@ -814,6 +852,7 @@ async function init() {
     tagCloud.pointerX = -10000;
     tagCloud.pointerY = -10000;
   });
+  window.addEventListener("resize", fitVisibleText, { passive: true });
 }
 
 init();

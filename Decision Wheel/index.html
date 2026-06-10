@@ -68,14 +68,32 @@
       <section class="hero-section" aria-labelledby="heroTitle">
         <div class="hero-copy">
           <p class="eyebrow" id="detectedRegion">Local menu machine</p>
-          <h1 id="heroTitle" data-i18n="heroTitle">오늘 뭐 먹지?</h1>
+          <h1 id="heroTitle" data-i18n="heroTitle" data-fit-text data-fit-min="30">오늘 뭐 먹지?</h1>
           <p class="hero-description" data-i18n="heroDescription">
             선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다.
             직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.
           </p>
+          <section class="control-section hero-controls" aria-label="메뉴 추천 설정">
+            <div class="control-group">
+              <span class="control-title" data-i18n="mealMode">식사 시간</span>
+              <div class="segmented" id="mealControls"></div>
+            </div>
+            <div class="control-group">
+              <span class="control-title" data-i18n="countryProfile">식사 문화 기준</span>
+              <div class="country-picker" id="countryPicker">
+                <button class="country-trigger" id="countryTrigger" type="button" aria-expanded="false" aria-controls="countryMenu">
+                  <span id="countryTriggerLabel">대한민국</span>
+                  <span class="country-chevron" aria-hidden="true">⌄</span>
+                </button>
+                <div class="country-menu" id="countryMenu" hidden>
+                  <div class="country-grid" id="countryGrid"></div>
+                </div>
+              </div>
+            </div>
+          </section>
           <div class="hero-actions">
-            <button class="primary-action" id="spinButton" type="button" data-i18n="spinButton">메뉴 시작</button>
-            <button class="secondary-action" id="shuffleButton" type="button" data-i18n="shuffleButton">새 후보 섞기</button>
+            <button class="primary-action" id="spinButton" type="button" data-i18n="spinButton">추천 시작</button>
+            <button class="secondary-action" id="shuffleButton" type="button" data-i18n="shuffleButton">메뉴 섞기</button>
           </div>
         </div>
 
@@ -87,9 +105,11 @@
             </div>
             <div class="slot-window" aria-live="off">
               <div class="slot-fade slot-fade-top"></div>
-              <div class="slot-reel muted" id="slotPrevious">김치찌개</div>
-              <div class="slot-reel active" id="slotCurrent">비빔밥</div>
-              <div class="slot-reel muted" id="slotNext">불고기</div>
+              <div class="slot-reel muted" id="slotPrevious2" data-fit-text data-fit-min="14">라면</div>
+              <div class="slot-reel muted" id="slotPrevious" data-fit-text data-fit-min="14">김치찌개</div>
+              <div class="slot-reel active" id="slotCurrent" data-fit-text data-fit-min="18">비빔밥</div>
+              <div class="slot-reel muted" id="slotNext" data-fit-text data-fit-min="14">불고기</div>
+              <div class="slot-reel muted" id="slotNext2" data-fit-text data-fit-min="14">냉면</div>
               <div class="slot-fade slot-fade-bottom"></div>
             </div>
             <div class="slot-meter" aria-hidden="true">
@@ -99,7 +119,7 @@
           <div class="recommendation-row">
             <div class="result-box" aria-live="polite">
               <span data-i18n="resultLabel">추천 메뉴</span>
-              <strong id="resultText">-</strong>
+              <strong id="resultText" data-fit-text data-fit-min="18">-</strong>
               <small id="timeInsight"></small>
               <div class="share-actions">
                 <button class="share-button" id="shareButton" type="button" data-i18n="shareButton" disabled>결과 공유</button>
@@ -118,25 +138,6 @@
               <div class="image-grid" id="imageGrid" aria-live="polite"></div>
               <p class="image-status" id="imageStatus" data-i18n="imageEmpty">메뉴가 결정되면 관련 이미지가 표시됩니다.</p>
             </section>
-          </div>
-        </div>
-      </section>
-
-      <section class="control-section" aria-label="메뉴 추천 설정">
-        <div class="control-group">
-          <span class="control-title" data-i18n="mealMode">식사 시간</span>
-          <div class="segmented" id="mealControls"></div>
-        </div>
-        <div class="control-group">
-          <span class="control-title" data-i18n="countryProfile">식사 문화 기준</span>
-          <div class="country-picker" id="countryPicker">
-            <button class="country-trigger" id="countryTrigger" type="button" aria-expanded="false" aria-controls="countryMenu">
-              <span id="countryTriggerLabel">대한민국</span>
-              <span class="country-chevron" aria-hidden="true">⌄</span>
-            </button>
-            <div class="country-menu" id="countryMenu" hidden>
-              <div class="country-grid" id="countryGrid"></div>
-            </div>
           </div>
         </div>
       </section>
