@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Menu Rush - 세계 음식 메뉴 랜덤 추천</title>
+    <meta
+      name="description"
+      content="40개 국가의 현지 음식 중 현재 시간대에 어울리는 메뉴를 빠르게 골라주는 무료 슬롯형 음식 추천 도구입니다."
+    />
+    <meta
+      name="keywords"
+      content="음식 추천, 메뉴 추천, 오늘 뭐 먹지, 세계 음식, 점심 메뉴 추천, 저녁 메뉴 추천, 랜덤 메뉴, 메뉴 슬롯"
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#f8fafc" />
+    <link rel="canonical" href="https://example.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Menu Rush" />
+    <meta property="og:title" content="Menu Rush - 세계 음식 메뉴 랜덤 추천" />
+    <meta
+      property="og:description"
+      content="40개 국가의 식사 문화와 현지 메뉴를 반영해 한 가지 음식을 빠르게 추천합니다."
+    />
+    <meta property="og:image" content="https://example.com/og-image.png" />
+    <meta property="og:image:alt" content="오늘 뭐 먹지? 세계 음식 슬롯 머신 Menu Rush" />
+    <meta property="og:locale" content="ko_KR" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="오늘 뭐 먹지? | Menu Rush" />
+    <meta name="twitter:description" content="40개 국가의 메뉴 중 오늘 먹을 음식 하나를 빠르게 골라보세요." />
+    <meta name="twitter:image" content="https://example.com/og-image.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Menu Rush",
+        "applicationCategory": "LifestyleApplication",
+        "operatingSystem": "Any",
+        "description": "40개 국가의 현지 음식 중 현재 시간대에 어울리는 메뉴를 슬롯 머신 방식으로 추천하는 무료 도구입니다.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div class="tag-cloud-scene" id="tagCloudScene" aria-hidden="true"></div>
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="홈으로 이동">
+        <span class="brand-mark">M</span>
+        <span data-i18n="brand">Menu Rush</span>
+      </a>
+      <nav class="nav-links" aria-label="주요 메뉴">
+        <a href="#how" data-i18n="navHow">기능 소개</a>
+        <a href="#about" data-i18n="navAbout">사이트 소개</a>
+        <a href="#privacy" data-i18n="navPrivacy">개인정보처리방침</a>
+      </nav>
+      <label class="language-picker">
+        <span data-i18n="languageLabel">언어</span>
+        <select id="languageSelect" aria-label="언어 선택"></select>
+      </label>
+    </header>
+
+    <main id="top">
+      <section class="hero-section" aria-labelledby="heroTitle">
+        <div class="hero-copy">
+          <p class="eyebrow" id="detectedRegion">Local menu machine</p>
+          <h1 id="heroTitle" data-i18n="heroTitle">오늘 뭐 먹지?</h1>
+          <p class="hero-description" data-i18n="heroDescription">
+            선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다.
+            직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.
+          </p>
+          <div class="hero-actions">
+            <button class="primary-action" id="spinButton" type="button" data-i18n="spinButton">메뉴 시작</button>
+            <button class="secondary-action" id="shuffleButton" type="button" data-i18n="shuffleButton">새 후보 섞기</button>
+          </div>
+        </div>
+
+        <div class="slot-panel" aria-label="음식 메뉴 슬롯 머신">
+          <div class="slot-machine" id="slotMachine">
+            <div class="slot-topline">
+              <span id="machineCountry">대한민국</span>
+              <span class="machine-status" id="machineStatus">READY</span>
+            </div>
+            <div class="slot-window" aria-live="off">
+              <div class="slot-fade slot-fade-top"></div>
+              <div class="slot-reel muted" id="slotPrevious">김치찌개</div>
+              <div class="slot-reel active" id="slotCurrent">비빔밥</div>
+              <div class="slot-reel muted" id="slotNext">불고기</div>
+              <div class="slot-fade slot-fade-bottom"></div>
+            </div>
+            <div class="slot-meter" aria-hidden="true">
+              <span></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
+          <div class="recommendation-row">
+            <div class="result-box" aria-live="polite">
+              <span data-i18n="resultLabel">추천 메뉴</span>
+              <strong id="resultText">-</strong>
+              <small id="timeInsight"></small>
+              <div class="share-actions">
+                <button class="share-button" id="shareButton" type="button" data-i18n="shareButton" disabled>결과 공유</button>
+                <button class="copy-button" id="copyButton" type="button" data-i18n="copyButton">링크 복사</button>
+              </div>
+              <small class="share-feedback" id="shareFeedback" role="status"></small>
+            </div>
+            <section class="image-results" id="imageResults" aria-labelledby="imageResultsTitle">
+              <div class="image-results-heading">
+                <div>
+                  <span data-i18n="imageEyebrow">이미지 검색</span>
+                  <h2 id="imageResultsTitle" data-i18n="imageTitle">추천 메뉴 이미지</h2>
+                </div>
+                <span class="image-provider-label" data-i18n="imageProviders">Unsplash + Pexels</span>
+              </div>
+              <div class="image-grid" id="imageGrid" aria-live="polite"></div>
+              <p class="image-status" id="imageStatus" data-i18n="imageEmpty">메뉴가 결정되면 관련 이미지가 표시됩니다.</p>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section class="control-section" aria-label="메뉴 추천 설정">
+        <div class="control-group">
+          <span class="control-title" data-i18n="mealMode">식사 시간</span>
+          <div class="segmented" id="mealControls"></div>
+        </div>
+        <div class="control-group">
+          <span class="control-title" data-i18n="countryProfile">식사 문화 기준</span>
+          <div class="country-picker" id="countryPicker">
+            <button class="country-trigger" id="countryTrigger" type="button" aria-expanded="false" aria-controls="countryMenu">
+              <span id="countryTriggerLabel">대한민국</span>
+              <span class="country-chevron" aria-hidden="true">⌄</span>
+            </button>
+            <div class="country-menu" id="countryMenu" hidden>
+              <div class="country-grid" id="countryGrid"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="content-section" id="how" aria-labelledby="howTitle">
+        <div class="section-heading">
+          <p class="eyebrow" data-i18n="howEyebrow">Feature</p>
+          <h2 id="howTitle" data-i18n="howTitle">음식 선택을 빠르고 가볍게</h2>
+        </div>
+        <div class="feature-grid">
+          <article>
+            <h3 data-i18n="feature1Title">시간대 기반 추천</h3>
+            <p data-i18n="feature1Text">
+              브라우저의 시간대 정보를 활용해 현재 시각에 어울리는 식사 구간을 자동으로 선택합니다.
+            </p>
+          </article>
+          <article>
+            <h3 data-i18n="feature2Title">40개 국가별 현지 메뉴</h3>
+            <p data-i18n="feature2Text">
+              국가를 바꾸면 식사 시간뿐 아니라 추천 후보도 해당 지역의 대표 음식으로 즉시 변경됩니다.
+            </p>
+          </article>
+          <article>
+            <h3 data-i18n="feature3Title">직접 선택과 전체 보기</h3>
+            <p data-i18n="feature3Text">
+              원하는 식사 시간만 골라 돌리거나 전체 메뉴를 한 번에 섞어 더 넓은 후보에서 추천받을 수 있습니다.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="content-section split-section" id="about" aria-labelledby="aboutTitle">
+        <div>
+          <p class="eyebrow" data-i18n="aboutEyebrow">About</p>
+          <h2 id="aboutTitle" data-i18n="aboutTitle">사이트 소개</h2>
+        </div>
+        <div class="rich-text">
+          <p data-i18n="aboutText1">
+            이 웹사이트는 매일 반복되는 메뉴 고민을 줄이기 위해 만든 슬롯형 음식 추천 도구입니다.
+            사용자는 별도의 가입이나 앱 설치 없이 웹페이지에 접속해 바로 메뉴를 추천받을 수 있습니다.
+          </p>
+          <p data-i18n="aboutText2">
+            추천 결과는 일반적인 식사 시간, 지역별 식문화, 그리고 메뉴 후보 목록을 바탕으로 무작위로
+            생성됩니다. 실제 영업 여부, 알레르기, 건강 상태, 종교적 식단 제한, 개인 선호도는 사용자가
+            최종적으로 확인해야 합니다.
+          </p>
+        </div>
+      </section>
+
+      <section class="content-section split-section" id="privacy" aria-labelledby="privacyTitle">
+        <div>
+          <p class="eyebrow" data-i18n="privacyEyebrow">Privacy</p>
+          <h2 id="privacyTitle" data-i18n="privacyTitle">개인정보처리방침</h2>
+        </div>
+        <div class="rich-text">
+          <p data-i18n="privacyText1">
+            본 사이트는 메뉴 추천 기능을 제공하기 위해 회원가입, 이름, 이메일, 전화번호 등 직접 식별 가능한
+            개인정보를 요구하지 않습니다. 기본 언어와 식사 시간 추정에는 브라우저가 제공하는 언어 설정,
+            시간대, 현지 시각 정보가 사용될 수 있으며 이 정보는 사용자의 기기 안에서 처리됩니다.
+          </p>
+          <p data-i18n="privacyText2">
+            향후 광고 운영, 방문 통계, 서비스 품질 개선을 위해 Google AdSense, Google Analytics 또는
+            유사한 제3자 서비스가 도입될 수 있습니다. 이 경우 쿠키 또는 광고 식별자가 사용될 수 있으며,
+            사용자는 브라우저 설정을 통해 쿠키 저장을 제한하거나 삭제할 수 있습니다.
+          </p>
+          <p data-i18n="privacyText3">
+            본 사이트는 Cloudflare Pages와 같은 정적 호스팅 환경에서 제공될 수 있습니다. 호스팅 사업자는
+            보안, 트래픽 관리, 오류 대응을 위해 접속 IP, 사용자 에이전트, 요청 시간 등 표준 서버 로그를
+            처리할 수 있습니다. 자세한 사항은 각 서비스 제공자의 개인정보 보호정책을 확인해 주세요.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span data-i18n="footer">Menu Rush는 간단한 참고용 메뉴 추천 도구입니다.</span>
+      <a href="#privacy" data-i18n="footerPrivacy">개인정보처리방침</a>
+    </footer>
+
+    <script src="./image-search-config.js" defer></script>
+    <script src="./menu-data.js" defer></script>
+    <script src="./app.js" defer></script>
+  </body>
+</html>

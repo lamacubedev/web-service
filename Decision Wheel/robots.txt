@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+# Add your production sitemap URL after connecting a custom domain.
