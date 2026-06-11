@@ -611,7 +611,7 @@ h3 {
 .share-actions {
   display: flex;
   flex: none;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
 }
 
@@ -623,6 +623,7 @@ h3 {
   cursor: pointer;
   font-size: 0.88rem;
   font-weight: 800;
+  white-space: nowrap;
 }
 
 .share-button {
@@ -651,19 +652,30 @@ h3 {
 }
 
 .share-feedback {
-  display: block;
-  min-height: 1.4em;
-  margin-top: 8px;
+  position: fixed;
+  z-index: 120;
+  right: 16px;
+  bottom: 16px;
+  max-width: min(440px, calc(100vw - 32px));
+  margin: 0;
+  border: 1px solid rgba(19, 122, 91, 0.22);
+  border-radius: 8px;
+  background: #ffffff;
   color: var(--accent-strong) !important;
-  font-size: 0.8rem;
+  padding: 11px 14px;
+  box-shadow: 0 14px 38px rgba(25, 37, 31, 0.18);
+  font-size: 0.82rem;
   font-weight: 700;
   opacity: 0;
-  transform: translateY(-3px);
-  transition: opacity 160ms ease, transform 160ms ease;
+  visibility: hidden;
+  transform: translateY(8px);
+  pointer-events: none;
+  transition: opacity 160ms ease, transform 160ms ease, visibility 160ms ease;
 }
 
 .share-feedback.is-visible {
   opacity: 1;
+  visibility: visible;
   transform: translateY(0);
 }
 

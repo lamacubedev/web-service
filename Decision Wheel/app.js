@@ -32,7 +32,6 @@ const COPY = {
     brand: "Menu Roulette Rush", navHow: "기능 소개", navAbout: "사이트 소개", navPrivacy: "개인정보처리방침", languageLabel: "언어",
     heroTitle: "오늘 뭐 먹지?",
     heroDescription: "40개 국가의 식사 문화와 현지 메뉴를 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
-    heroResultDescription: "40개 국가의 식사 문화와 현지 메뉴를 반영한 추천 메뉴는 {dish}입니다.",
     spinButton: "추천 시작", shuffleButton: "메뉴 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
     shareButton: "결과 공유", copyButton: "결과 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "{language}로 결과를 공유할 수 있는 링크가 복사되었어요.", copyError: "복사하지 못했습니다. 브라우저의 클립보드 권한을 확인해 주세요.", sharePrompt: "오늘 뭐 먹지? Menu Roulette Rush가 {dish}을(를) 골랐어요!",
     howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "현지 시간에 맞춘 추천", feature1Text: "선택한 국가의 현지 시간과 식사 문화를 반영해 현재 시간대에 어울리는 후보를 자동으로 구성합니다.",
@@ -53,7 +52,6 @@ const COPY = {
     brand: "Menu Roulette Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
     heroTitle: "What should I eat today?",
     heroDescription: "Menu Roulette Rush uses dining cultures and local menus from 40 countries to suggest what fits now. Choose a meal period or mix every menu.",
-    heroResultDescription: "Using dining cultures and local menus from 40 countries, the recommended menu is {dish}.",
     spinButton: "Start recommendation", shuffleButton: "Shuffle menus", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
     shareButton: "Share result", copyButton: "Copy result", shareSuccess: "The share menu is open.", copySuccess: "A link for sharing the result in {language} has been copied.", copyError: "Could not copy the result. Check your browser's clipboard permission.", sharePrompt: "What should I eat today? Menu Roulette Rush picked {dish}!",
     howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Local-time recommendations", feature1Text: "The selected country's local time and dining culture determine the most suitable meal candidates.",
@@ -749,10 +747,7 @@ function updateInsight() {
 }
 
 function updateHeroDescription() {
-  const dish = elements.resultText.dataset.dish;
-  elements.heroDescription.textContent = dish
-    ? t("heroResultDescription", { dish: displayDish(dish) })
-    : t("heroDescription");
+  elements.heroDescription.textContent = t("heroDescription");
 }
 
 function setSlotTexts(centerIndex) {
