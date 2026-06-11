@@ -1,4 +1,4 @@
-const SHEET_NAME = "Inquiries";
+const SHEET_NAME = "문의내용";
 const HEADERS = [
   "접수 시각",
   "서비스 ID",
@@ -10,6 +10,18 @@ const HEADERS = [
   "제목",
   "문의 내용",
 ];
+
+function doGet() {
+  const properties = PropertiesService.getScriptProperties();
+  return jsonOutput_({
+    ok: true,
+    service: "menu-rush-contact",
+    configured: Boolean(
+      properties.getProperty("CONTACT_SHARED_SECRET")
+      && properties.getProperty("CONTACT_SPREADSHEET_ID")
+    ),
+  });
+}
 
 function doPost(e) {
   try {
@@ -50,6 +62,20 @@ function doPost(e) {
   } catch (error) {
     return jsonOutput_({ ok: false, error: String(error) });
   }
+}
+
+function testConfiguration() {
+  const properties = PropertiesService.getScriptProperties();
+  const expectedSecret = properties.getProperty("CONTACT_SHARED_SECRET");
+  const spreadsheetId = properties.getProperty("CONTACT_SPREADSHEET_ID");
+
+  if (!expectedSecret) throw new Error("CONTACT_SHARED_SECRET 스크립트 속성이 없습니다.");
+  if (!spreadsheetId) throw new Error("CONTACT_SPREADSHEET_ID 스크립트 속성이 없습니다.");
+
+  const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
+  const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
+  if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+  console.log(`연결 성공: ${spreadsheet.getName()} / ${sheet.getName()}`);
 }
 
 function safeCell_(value) {

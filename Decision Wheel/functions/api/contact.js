@@ -42,16 +42,35 @@ export async function onRequestPost({ request, env }) {
     return json({ error: "Required fields are missing." }, 400);
   }
 
-  const response = await fetch(env.GOOGLE_SHEETS_WEB_APP_URL, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    redirect: "follow",
-  });
+  let response;
+  try {
+    response = await fetch(env.GOOGLE_SHEETS_WEB_APP_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+      redirect: "follow",
+    });
+  } catch (error) {
+    console.error("Google Sheets request failed.", error);
+    return json({ error: "Inquiry storage request failed.", code: "UPSTREAM_REQUEST_FAILED" }, 502);
+  }
 
-  if (!response.ok) return json({ error: "Inquiry storage failed." }, 502);
+  const responseText = await response.text();
+  if (!response.ok) {
+    console.error("Google Sheets returned an HTTP error.", response.status, responseText.slice(0, 500));
+    return json({ error: "Inquiry storage failed.", code: "UPSTREAM_HTTP_ERROR" }, 502);
+  }
 
-  const result = await response.json().catch(() => ({ ok: true }));
-  if (result.ok === false) return json({ error: "Inquiry storage failed." }, 502);
+  let result;
+  try {
+    result = JSON.parse(responseText);
+  } catch {
+    console.error("Google Sheets returned a non-JSON response.", responseText.slice(0, 500));
+    return json({ error: "Inquiry storage returned an invalid response.", code: "UPSTREAM_INVALID_RESPONSE" }, 502);
+  }
+  if (result.ok !== true) {
+    console.error("Google Sheets rejected the inquiry.", result.error || result);
+    return json({ error: "Inquiry storage failed.", code: "UPSTREAM_REJECTED" }, 502);
+  }
   return json({ ok: true });
 }

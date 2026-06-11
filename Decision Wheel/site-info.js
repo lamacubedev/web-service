@@ -6,10 +6,16 @@ const infoElements = {
   close: document.querySelector("#infoCloseButton"),
 };
 
-const SITE_LANGUAGES = new Set([
-  "ko", "en", "ja", "zh", "es", "fr", "de", "pt", "it", "ru", "ar", "hi", "id",
-  "vi", "th", "tr", "el", "ms", "tl", "uk", "pl", "nl", "sv", "no", "da", "he",
-]);
+const SITE_LANGUAGE_OPTIONS = [
+  ["ko", "한국어"], ["en", "English"], ["ja", "日本語"], ["zh", "中文"],
+  ["es", "Español"], ["fr", "Français"], ["de", "Deutsch"], ["pt", "Português"],
+  ["it", "Italiano"], ["ru", "Русский"], ["ar", "العربية"], ["hi", "हिन्दी"],
+  ["id", "Bahasa Indonesia"], ["vi", "Tiếng Việt"], ["th", "ไทย"], ["tr", "Türkçe"],
+  ["el", "Ελληνικά"], ["ms", "Bahasa Melayu"], ["tl", "Filipino"], ["uk", "Українська"],
+  ["pl", "Polski"], ["nl", "Nederlands"], ["sv", "Svenska"], ["no", "Norsk"],
+  ["da", "Dansk"], ["he", "עברית"],
+];
+const SITE_LANGUAGES = new Set(SITE_LANGUAGE_OPTIONS.map(([code]) => code));
 const COUNTRY_LANGUAGES = {
   KR: "ko", US: "en", JP: "ja", CN: "zh", ES: "es", FR: "fr", DE: "de", GB: "en",
   IN: "hi", ID: "id", VN: "vi", TH: "th", IT: "it", PT: "pt", MX: "es", BR: "pt",
@@ -25,6 +31,41 @@ const originalText = new WeakMap();
 const originalAttributes = new WeakMap();
 let visitorCountry = "";
 let activeSiteLanguage = "ko";
+
+function createInfoLanguageSelect() {
+  if (document.querySelector("#languageSelect")) return null;
+  const actions = document.querySelector(".info-page-actions");
+  if (!actions) return null;
+
+  const wrapper = document.createElement("label");
+  wrapper.className = "info-language-control";
+  wrapper.setAttribute("data-no-translate", "");
+
+  const select = document.createElement("select");
+  select.id = "infoLanguageSelect";
+  select.setAttribute("aria-label", "Language");
+  SITE_LANGUAGE_OPTIONS.forEach(([code, label]) => {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = label;
+    select.appendChild(option);
+  });
+  select.addEventListener("change", async (event) => {
+    const language = event.target.value;
+    try {
+      localStorage.setItem(SITE_LANGUAGE_STORAGE_KEY, language);
+    } catch {
+      // The current page still uses the selected language.
+    }
+    await localizeSiteContent(language);
+  });
+
+  wrapper.appendChild(select);
+  actions.prepend(wrapper);
+  return select;
+}
+
+const infoLanguageSelect = createInfoLanguageSelect();
 
 function browserLanguage() {
   const language = (navigator.language || "en").split("-")[0].toLowerCase();
@@ -176,6 +217,7 @@ function collectTranslationTargets() {
 async function localizeSiteContent(language, country = visitorCountry) {
   const target = SITE_LANGUAGES.has(language) ? language : "en";
   activeSiteLanguage = target;
+  if (infoLanguageSelect) infoLanguageSelect.value = target;
   document.documentElement.lang = target;
   document.documentElement.dir = ["ar", "he"].includes(target) ? "rtl" : "ltr";
   document.documentElement.setAttribute("aria-busy", "true");
@@ -296,7 +338,10 @@ contactForm?.addEventListener("submit", async (event) => {
         website: data.get("website"),
       }),
     });
-    if (!response.ok) throw new Error(`Contact request failed: ${response.status}`);
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || result.ok !== true) {
+      throw new Error(`Contact request failed: ${response.status} ${result.code || ""}`.trim());
+    }
     contactForm.reset();
     status.textContent = status.dataset.success;
     status.dataset.state = "success";

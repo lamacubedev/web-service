@@ -197,6 +197,51 @@ body.info-lock {
   gap: 8px;
 }
 
+.info-language-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.info-language-control::before {
+  position: absolute;
+  left: 11px;
+  content: "文";
+  color: var(--info-muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  pointer-events: none;
+}
+
+.info-language-control select {
+  width: min(148px, 24vw);
+  min-height: 42px;
+  appearance: none;
+  border: 1px solid var(--info-line);
+  border-radius: 8px;
+  background: var(--info-surface);
+  color: var(--info-text);
+  padding: 0 30px 0 34px;
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.info-language-control::after {
+  position: absolute;
+  right: 11px;
+  content: "⌄";
+  color: var(--info-muted);
+  pointer-events: none;
+}
+
+.info-language-control select:hover,
+.info-language-control select:focus-visible {
+  border-color: var(--info-accent);
+  outline: none;
+}
+
 .info-home-link {
   min-height: 42px;
   border: 1px solid var(--info-line);
@@ -430,6 +475,10 @@ body.info-lock {
   .info-brand span:last-child,
   .info-home-link span {
     display: none;
+  }
+
+  .info-language-control select {
+    width: 112px;
   }
 
   .principle-grid,
