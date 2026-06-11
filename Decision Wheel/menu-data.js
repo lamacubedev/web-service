@@ -246,58 +246,14 @@ for (const [code, additions] of Object.entries(MENU_COMPLETIONS)) {
   culture.menus = categorizeDishes(culture.dishes);
 }
 
-const MENU_VARIANT_LABELS = {
-  ko: ["정통", "현지식", "가정식"],
-  en: ["Classic", "Local style", "Homestyle"],
-  ja: ["定番", "ご当地風", "家庭風"],
-  zh: ["经典", "地方风味", "家常"],
-  es: ["Clásico", "Estilo local", "Casero"],
-  fr: ["Classique", "Style local", "Maison"],
-  de: ["Klassisch", "Regional", "Hausgemacht"],
-  hi: ["पारंपरिक", "स्थानीय शैली", "घरेलू शैली"],
-  id: ["Klasik", "Gaya lokal", "Rumahan"],
-  vi: ["Truyền thống", "Kiểu địa phương", "Kiểu nhà làm"],
-  th: ["แบบดั้งเดิม", "สไตล์ท้องถิ่น", "แบบโฮมเมด"],
-  it: ["Classico", "Stile locale", "Fatto in casa"],
-  pt: ["Clássico", "Estilo local", "Caseiro"],
-  tr: ["Klasik", "Yöresel", "Ev usulü"],
-  el: ["Κλασικό", "Τοπικό", "Σπιτικό"],
-  ms: ["Klasik", "Gaya tempatan", "Gaya rumahan"],
-  tl: ["Klasiko", "Lokal na estilo", "Lutong-bahay"],
-  ru: ["Классический", "Местный стиль", "Домашний"],
-  uk: ["Класичний", "Місцевий стиль", "Домашній"],
-  pl: ["Klasyczne", "Regionalne", "Domowe"],
-  nl: ["Klassiek", "Lokale stijl", "Huisgemaakt"],
-  sv: ["Klassisk", "Lokal stil", "Husmanskost"],
-  no: ["Klassisk", "Lokal stil", "Hjemmelaget"],
-  da: ["Klassisk", "Lokal stil", "Hjemmelavet"],
-  ar: ["تقليدي", "على الطريقة المحلية", "منزلي"],
-  he: ["קלאסי", "בסגנון מקומי", "ביתי"],
-};
-
 const IMAGE_QUERY_BY_DISH = new Map();
 
-function expandCultureMenus(culture) {
-  const originalDishes = [...culture.dishes];
-  const labels = MENU_VARIANT_LABELS[culture.languages[0]] || MENU_VARIANT_LABELS.en;
-  const expanded = [];
-
-  for (const dish of originalDishes) {
-    IMAGE_QUERY_BY_DISH.set(dish, dish);
-    expanded.push(dish);
-    for (const label of labels) {
-      const variant = `${label} ${dish}`;
-      IMAGE_QUERY_BY_DISH.set(variant, dish);
-      expanded.push(variant);
-    }
-  }
-
-  culture.dishes = [...new Set(expanded)];
-  culture.menus = categorizeDishes(culture.dishes);
-}
-
 for (const culture of Object.values(CULTURES)) {
-  expandCultureMenus(culture);
+  culture.dishes = [...new Set(culture.dishes.map((dish) => dish.trim()))];
+  for (const dish of culture.dishes) {
+    IMAGE_QUERY_BY_DISH.set(dish, dish);
+  }
+  culture.menus = categorizeDishes(culture.dishes);
 }
 
 const REGION_TO_CULTURE = Object.fromEntries(Object.keys(CULTURES).map((code) => [code, code]));
