@@ -14,6 +14,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#f8fafc" />
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
     <link rel="canonical" href="https://example.com/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Menu Rush" />
@@ -107,10 +108,34 @@
               <div class="slot-fade slot-fade-top"></div>
               <div class="slot-reel muted" id="slotPrevious2" data-fit-text data-fit-min="14">라면</div>
               <div class="slot-reel muted" id="slotPrevious" data-fit-text data-fit-min="14">김치찌개</div>
-              <div class="slot-reel active" id="slotCurrent" data-fit-text data-fit-min="18">비빔밥</div>
+              <button
+                class="slot-reel active"
+                id="slotCurrent"
+                type="button"
+                data-fit-text
+                data-fit-min="18"
+                aria-expanded="false"
+                aria-controls="menuSearchPopover"
+                aria-haspopup="true"
+                disabled
+              >비빔밥</button>
               <div class="slot-reel muted" id="slotNext" data-fit-text data-fit-min="14">불고기</div>
               <div class="slot-reel muted" id="slotNext2" data-fit-text data-fit-min="14">냉면</div>
               <div class="slot-fade slot-fade-bottom"></div>
+            </div>
+            <div class="menu-search-popover" id="menuSearchPopover" role="menu" hidden>
+              <div class="menu-search-option">
+                <a id="searchUnsplash" role="menuitem" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                <button class="new-window-button" type="button" data-search-link="searchUnsplash"><span aria-hidden="true"></span></button>
+              </div>
+              <div class="menu-search-option">
+                <a id="searchPexels" role="menuitem" target="_blank" rel="noopener noreferrer">Pexels</a>
+                <button class="new-window-button" type="button" data-search-link="searchPexels"><span aria-hidden="true"></span></button>
+              </div>
+              <div class="menu-search-option">
+                <a id="searchGoogle" role="menuitem" target="_blank" rel="noopener noreferrer">Google Images</a>
+                <button class="new-window-button" type="button" data-search-link="searchGoogle"><span aria-hidden="true"></span></button>
+              </div>
             </div>
             <div class="slot-meter" aria-hidden="true">
               <span></span><span></span><span></span><span></span><span></span>

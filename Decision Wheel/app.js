@@ -45,7 +45,7 @@ const COPY = {
     privacyText3: "본 사이트는 Cloudflare Pages와 같은 정적 호스팅 환경에서 제공될 수 있습니다. 호스팅 사업자는 보안과 오류 대응을 위해 표준 서버 로그를 처리할 수 있습니다.",
     footer: "Menu Rush는 간단한 참고용 메뉴 추천 도구입니다.", footerPrivacy: "개인정보처리방침",
     insight: "{time} 기준 {meal} 메뉴입니다.", region: "{region} 식사 문화 기준", ready: "준비", running: "선택 중", done: "결정", candidateCount: "메뉴 {count}개",
-    imageEyebrow: "이미지 검색", imageTitle: "추천 메뉴 이미지", imageProviders: "Unsplash + Pexels", imageEmpty: "메뉴가 결정되면 관련 이미지가 표시됩니다.", imageLoading: "Unsplash와 Pexels에서 메뉴 이미지를 검색하고 있습니다.", imageUnavailable: "Unsplash 또는 Pexels API 설정이 필요합니다.", imageError: "이미지를 불러오지 못했습니다.",
+    imageEyebrow: "이미지 검색", imageTitle: "추천 메뉴 이미지", imageProviders: "Unsplash + Pexels", imageEmpty: "메뉴가 결정되면 관련 이미지가 표시됩니다.", imageLoading: "Unsplash와 Pexels에서 메뉴 이미지를 검색하고 있습니다.", imageUnavailable: "Unsplash 또는 Pexels API 설정이 필요합니다.", imageError: "이미지를 불러오지 못했습니다.", openNewWindow: "새 창에서 열기",
   },
   en: {
     brand: "Menu Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
@@ -63,7 +63,7 @@ const COPY = {
     privacyText3: "This site may be hosted on Cloudflare Pages. Hosting providers may process standard server logs for security and reliability.",
     footer: "Menu Rush is a lightweight food suggestion tool.", footerPrivacy: "Privacy Policy",
     insight: "{meal} picks for {time}.", region: "{region} dining culture", ready: "READY", running: "PICKING", done: "SELECTED", candidateCount: "{count} menus",
-    imageEyebrow: "Image search", imageTitle: "Recommended menu images", imageProviders: "Unsplash + Pexels", imageEmpty: "Related images appear after a menu is selected.", imageLoading: "Searching Unsplash and Pexels for menu images.", imageUnavailable: "Unsplash or Pexels API configuration is required.", imageError: "Images could not be loaded.",
+    imageEyebrow: "Image search", imageTitle: "Recommended menu images", imageProviders: "Unsplash + Pexels", imageEmpty: "Related images appear after a menu is selected.", imageLoading: "Searching Unsplash and Pexels for menu images.", imageUnavailable: "Unsplash or Pexels API configuration is required.", imageError: "Images could not be loaded.", openNewWindow: "Open in a new window",
   },
 };
 
@@ -291,6 +291,11 @@ const elements = {
   current: document.querySelector("#slotCurrent"),
   next: document.querySelector("#slotNext"),
   next2: document.querySelector("#slotNext2"),
+  menuSearchPopover: document.querySelector("#menuSearchPopover"),
+  searchUnsplash: document.querySelector("#searchUnsplash"),
+  searchPexels: document.querySelector("#searchPexels"),
+  searchGoogle: document.querySelector("#searchGoogle"),
+  newWindowButtons: document.querySelectorAll(".new-window-button"),
   countryPicker: document.querySelector("#countryPicker"),
   countryTrigger: document.querySelector("#countryTrigger"),
   countryTriggerLabel: document.querySelector("#countryTriggerLabel"),
@@ -313,6 +318,7 @@ const tagCloud = {
   rotation: 0,
   frame: 0,
 };
+let menuSearchCloseTimer = 0;
 
 
 function detectCulture() {
@@ -427,17 +433,67 @@ function fitVisibleText() {
   });
 }
 
+function closeMenuSearch() {
+  clearTimeout(menuSearchCloseTimer);
+  elements.menuSearchPopover.hidden = true;
+  elements.current.setAttribute("aria-expanded", "false");
+}
+
+function openMenuSearch() {
+  if (elements.current.disabled || !elements.current.dataset.rawDish) return;
+  clearTimeout(menuSearchCloseTimer);
+  elements.menuSearchPopover.hidden = false;
+  elements.current.setAttribute("aria-expanded", "true");
+}
+
+function scheduleMenuSearchClose() {
+  clearTimeout(menuSearchCloseTimer);
+  menuSearchCloseTimer = window.setTimeout(closeMenuSearch, 120);
+}
+
+function updateMenuSearchLinks(rawDish) {
+  if (!rawDish) {
+    elements.current.disabled = true;
+    elements.current.removeAttribute("data-raw-dish");
+    closeMenuSearch();
+    return;
+  }
+  const query = (IMAGE_QUERY_BY_DISH.get(rawDish) || rawDish).trim();
+  elements.current.disabled = false;
+  elements.current.dataset.rawDish = rawDish;
+  elements.searchUnsplash.href = `https://unsplash.com/s/photos/${encodeURIComponent(query)}`;
+  elements.searchPexels.href = `https://www.pexels.com/search/${encodeURIComponent(query)}/`;
+  elements.searchGoogle.href = `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(query)}`;
+}
+
+function updateNewWindowLabels() {
+  for (const button of elements.newWindowButtons) {
+    const link = document.querySelector(`#${button.dataset.searchLink}`);
+    const label = `${link.textContent}: ${t("openNewWindow")}`;
+    button.title = label;
+    button.setAttribute("aria-label", label);
+  }
+}
+
 function renderSlotPreview() {
   const items = state.items.length ? state.items : Object.values(CULTURES[state.culture].menus).flat();
+  const selectedDish = elements.resultText.dataset.dish;
+  const previewItems = selectedDish && !items.includes(selectedDish)
+    ? CULTURES[state.culture].dishes
+    : items;
+  const selectedIndex = selectedDish ? previewItems.indexOf(selectedDish) : -1;
   const fallback = items[0] || "-";
-  elements.previous2.textContent = displayDish(items[0] || fallback);
-  elements.previous.textContent = displayDish(items[1] || fallback);
-  elements.current.textContent = displayDish(items[2] || fallback);
-  elements.next.textContent = displayDish(items[3] || fallback);
-  elements.next2.textContent = displayDish(items[4] || fallback);
+  const centerIndex = selectedIndex >= 0 ? selectedIndex : 2;
+  const previewLength = previewItems.length;
+  elements.previous2.textContent = displayDish(previewItems[(centerIndex - 2 + previewLength) % previewLength] || fallback);
+  elements.previous.textContent = displayDish(previewItems[(centerIndex - 1 + previewLength) % previewLength] || fallback);
+  elements.current.textContent = displayDish(previewItems[centerIndex] || fallback);
+  elements.next.textContent = displayDish(previewItems[(centerIndex + 1) % previewLength] || fallback);
+  elements.next2.textContent = displayDish(previewItems[(centerIndex + 2) % previewLength] || fallback);
   const culture = CULTURES[state.culture];
   elements.machineCountry.textContent = `${culture.flag} ${localizedCountryName(state.culture)}`;
   elements.machineStatus.textContent = `${t("ready")} · ${t("candidateCount", { count: state.items.length })}`;
+  updateMenuSearchLinks(elements.resultText.dataset.dish || "");
   fitVisibleText();
 }
 
@@ -495,7 +551,7 @@ function animateTagCloud() {
     node.repelX *= 0.86;
     node.repelY *= 0.86;
     node.element.style.transform = `translate3d(${projectedX + node.repelX}px, ${projectedY + node.repelY}px, 0) translate(-50%, -50%) scale(${scale})`;
-    node.element.style.opacity = String(0.035 + depth * 0.075);
+    node.element.style.opacity = String(0.055 + depth * 0.095);
     node.element.style.zIndex = String(Math.round(depth * 10));
   }
   tagCloud.frame = requestAnimationFrame(animateTagCloud);
@@ -674,6 +730,7 @@ async function runMenuMachine() {
   elements.shuffleButton.disabled = true;
   elements.machineStatus.textContent = t("running");
   elements.resultText.textContent = "-";
+  updateMenuSearchLinks("");
 
   const winnerIndex = Math.floor(Math.random() * state.items.length);
   const duration = 2500;
@@ -698,6 +755,7 @@ async function runMenuMachine() {
     const winningDish = state.items[winnerIndex];
     elements.resultText.textContent = displayDish(winningDish);
     elements.resultText.dataset.dish = winningDish;
+    updateMenuSearchLinks(winningDish);
     fitVisibleText();
     elements.shareButton.disabled = false;
     searchMenuImages(winningDish);
@@ -732,12 +790,14 @@ function applyTranslations() {
   renderCountryPicker();
   if (elements.resultText.dataset.dish) {
     elements.resultText.textContent = displayDish(elements.resultText.dataset.dish);
+    updateMenuSearchLinks(elements.resultText.dataset.dish);
     searchMenuImages(elements.resultText.dataset.dish);
   } else {
     renderSlotPreview();
   }
   renderTagCloud();
   updateInsight();
+  updateNewWindowLabels();
   fitVisibleText();
 }
 
@@ -835,6 +895,7 @@ function applySharedState() {
     elements.resultText.textContent = displayDish(dish);
     elements.resultText.dataset.dish = dish;
     elements.shareButton.disabled = false;
+    updateMenuSearchLinks(dish);
     fitVisibleText();
   }
 }
@@ -866,6 +927,24 @@ async function init() {
   elements.shuffleButton.addEventListener("click", () => buildItems());
   elements.shareButton.addEventListener("click", shareResult);
   elements.copyButton.addEventListener("click", copyShareLink);
+  elements.current.addEventListener("pointerenter", openMenuSearch);
+  elements.current.addEventListener("pointerleave", scheduleMenuSearchClose);
+  elements.current.addEventListener("focus", openMenuSearch);
+  elements.current.addEventListener("blur", scheduleMenuSearchClose);
+  elements.current.addEventListener("click", () => {
+    if (elements.menuSearchPopover.hidden) openMenuSearch();
+    else closeMenuSearch();
+  });
+  elements.menuSearchPopover.addEventListener("pointerenter", () => clearTimeout(menuSearchCloseTimer));
+  elements.menuSearchPopover.addEventListener("pointerleave", scheduleMenuSearchClose);
+  elements.menuSearchPopover.addEventListener("focusin", () => clearTimeout(menuSearchCloseTimer));
+  elements.menuSearchPopover.addEventListener("focusout", scheduleMenuSearchClose);
+  for (const button of elements.newWindowButtons) {
+    button.addEventListener("click", () => {
+      const link = document.querySelector(`#${button.dataset.searchLink}`);
+      window.open(link.href, `menu-rush-${button.dataset.searchLink}`, "popup=yes,width=1080,height=760,resizable=yes,scrollbars=yes");
+    });
+  }
   window.addEventListener("pointermove", (event) => {
     tagCloud.pointerX = event.clientX;
     tagCloud.pointerY = event.clientY;

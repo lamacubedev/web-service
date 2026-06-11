@@ -245,6 +245,7 @@ h3 {
 }
 
 .slot-machine {
+  position: relative;
   width: min(100%, 720px);
   border: 1px solid #cfd8d1;
   border-radius: 8px;
@@ -298,11 +299,129 @@ h3 {
 .slot-reel.active {
   position: relative;
   z-index: 2;
+  width: 100%;
   border-top: 1px solid #cbd6ce;
+  border-right: 0;
   border-bottom: 1px solid #cbd6ce;
+  border-left: 0;
   background: #ffffff;
   color: var(--accent-strong);
   font-size: 2rem;
+  font-family: inherit;
+  cursor: default;
+  appearance: none;
+}
+
+.slot-reel.active:not(:disabled) {
+  cursor: pointer;
+}
+
+.slot-reel.active:not(:disabled):hover,
+.slot-reel.active:not(:disabled):focus-visible {
+  background: #f3faf6;
+  outline: none;
+}
+
+.menu-search-popover {
+  position: absolute;
+  z-index: 8;
+  top: 44%;
+  left: 50%;
+  display: flex;
+  gap: 4px;
+  transform: translate(-50%, -100%);
+  border: 1px solid #52645a;
+  border-radius: 7px;
+  background: #ffffff;
+  padding: 6px;
+  box-shadow: 0 12px 34px rgba(13, 25, 19, 0.2);
+}
+
+.menu-search-popover[hidden] {
+  display: none;
+}
+
+.menu-search-popover::after {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  width: 12px;
+  height: 12px;
+  border-right: 1px solid #52645a;
+  border-bottom: 1px solid #52645a;
+  background: #ffffff;
+  content: "";
+  transform: translate(-50%, -6px) rotate(45deg);
+}
+
+.menu-search-option {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.menu-search-option:hover,
+.menu-search-option:focus-within {
+  background: var(--surface-soft);
+}
+
+.menu-search-popover a {
+  position: relative;
+  z-index: 1;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  border-radius: 5px 0 0 5px;
+  color: var(--text);
+  padding: 0 10px;
+  font-size: 0.76rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.menu-search-popover a:hover,
+.menu-search-popover a:focus-visible {
+  color: var(--accent-strong);
+  outline: none;
+}
+
+.new-window-button {
+  position: relative;
+  z-index: 1;
+  width: 32px;
+  height: 34px;
+  flex: none;
+  border: 0;
+  border-left: 1px solid var(--line);
+  border-radius: 0 5px 5px 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.new-window-button span::before,
+.new-window-button span::after {
+  position: absolute;
+  width: 9px;
+  height: 8px;
+  border: 1.5px solid currentColor;
+  content: "";
+}
+
+.new-window-button span::before {
+  top: 10px;
+  left: 10px;
+}
+
+.new-window-button span::after {
+  top: 13px;
+  left: 13px;
+  background: var(--surface);
+}
+
+.new-window-button:hover,
+.new-window-button:focus-visible {
+  color: var(--accent-strong);
+  outline: none;
 }
 
 .slot-reel.is-ticking {
@@ -787,6 +906,20 @@ h3 {
 
   .slot-window {
     height: 270px;
+  }
+
+  .menu-search-popover {
+    width: min(260px, calc(100% - 32px));
+    flex-direction: column;
+  }
+
+  .menu-search-option,
+  .menu-search-popover a {
+    width: 100%;
+  }
+
+  .menu-search-popover a {
+    flex: 1;
   }
 
   .image-grid {
