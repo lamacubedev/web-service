@@ -100,7 +100,35 @@ deployment does not automatically receive newly added values.
   Pages > Functions > Logs for the upstream error code.
 
 The sheet stores inquiries in the `문의내용` tab with submission time, service ID,
-service name, page URL, category, name, reply email, subject, and message.
+service name, page URL, category, name, reply email, subject, message, visitor
+country code, and country name. Redeploy Apps Script as a new version after
+adding the country columns.
+
+### Private visitor analytics
+
+The project includes a first-party analytics collector and the private
+`admin.html` dashboard. It stores no raw IP address. A random browser identifier
+is hashed in the Pages Function with a server-side secret before it reaches D1.
+Events older than 396 days are deleted automatically.
+
+1. In Cloudflare, create a D1 database such as `menu-rush-analytics`.
+2. Open the D1 console and execute `analytics-schema.sql`.
+3. In Pages > Settings > Bindings, add the D1 database with variable name
+   `ANALYTICS_DB`.
+4. In Pages > Settings > Variables and Secrets, add:
+   - `ANALYTICS_SALT`: a long random secret used only for visitor hashing
+   - `ADMIN_STATS_TOKEN`: a different long random secret used to open the
+     administrator dashboard
+5. Add the binding and secrets to both Production and Preview if both
+   environments need analytics, then redeploy the Pages project.
+6. Open `/admin.html`, enter `ADMIN_STATS_TOKEN`, and choose a 7, 30, or 90-day
+   range. The token is stored only in the current tab's `sessionStorage`.
+
+The statistics API rejects requests without the administrator token. For an
+additional login layer, protect `/admin.html` and `/api/analytics/stats*` with a
+Cloudflare Access self-hosted application restricted to the administrator's
+email address. Do not protect `/api/analytics/collect`, because visitors need to
+send anonymous page views to that endpoint.
 
 For another website, reuse the same Apps Script and spreadsheet. Give that site
 its own `serviceId` and `serviceName` in its contact configuration. All inquiries

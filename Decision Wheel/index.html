@@ -32,7 +32,7 @@
     <meta name="twitter:description" content="40개 국가의 메뉴 중 오늘 먹을 음식 하나를 빠르게 골라보세요." />
     <meta name="twitter:image" content="https://menu-rush.pages.dev/og-image.png" />
     <link rel="stylesheet" href="./site-info.css" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=20260611" />
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
@@ -58,7 +58,7 @@
             "name": "추천 결과를 어떻게 공유하나요?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "메뉴 결정 후 결과 공유 버튼을 누르거나 링크 복사 버튼으로 추천 주소를 전달할 수 있습니다."
+              "text": "메뉴 결정 후 결과 공유 버튼을 누르거나 결과 복사 버튼으로 추천 주소를 전달할 수 있습니다."
             }
           },
           {
@@ -178,9 +178,9 @@
             <small id="timeInsight"></small>
             <div class="share-actions">
               <button class="share-button" id="shareButton" type="button" data-i18n="shareButton" disabled>결과 공유</button>
-              <button class="copy-button" id="copyButton" type="button" data-i18n="copyButton">링크 복사</button>
+              <button class="copy-button" id="copyButton" type="button" data-i18n="copyButton">결과 복사</button>
             </div>
-            <small class="visually-hidden" id="shareFeedback" role="status"></small>
+            <small class="share-feedback" id="shareFeedback" role="status" aria-live="polite"></small>
           </div>
         </div>
 
@@ -248,7 +248,7 @@
         <div class="tips-grid">
           <article>
             <h3>결과를 함께 고르기</h3>
-            <p>결과 공유 또는 링크 복사를 사용하면 선택한 국가, 식사 시간과 결정 메뉴가 함께 전달됩니다. 여러 사람이 각자 결과를 공유한 뒤 최종 후보를 정할 때 유용합니다.</p>
+            <p>결과 공유 또는 결과 복사를 사용하면 선택한 국가, 식사 시간과 결정 메뉴가 함께 전달됩니다. 여러 사람이 각자 결과를 공유한 뒤 최종 후보를 정할 때 유용합니다.</p>
           </article>
           <article>
             <h3>낯선 메뉴 확인하기</h3>
@@ -268,7 +268,7 @@
         <div class="home-faq">
           <details>
             <summary>추천 결과는 어떻게 공유하나요?</summary>
-            <p>메뉴가 결정되면 결과 공유 버튼으로 기기의 공유 메뉴를 열거나, 링크 복사 버튼으로 주소를 복사해 메신저와 SNS에 붙여 넣을 수 있습니다.</p>
+            <p>메뉴가 결정되면 결과 공유 버튼으로 기기의 공유 메뉴를 열거나, 결과 복사 버튼으로 주소를 복사해 메신저와 SNS에 붙여 넣을 수 있습니다.</p>
           </details>
           <details>
             <summary>자동 선택은 어떤 시간을 기준으로 하나요?</summary>
@@ -317,7 +317,7 @@
 
     <script src="./image-search-config.js" defer></script>
     <script src="./menu-data.js" defer></script>
-    <script src="./app.js" defer></script>
+    <script src="./app.js?v=20260611b" defer></script>
     <script src="./site-info.js" defer></script>
   </body>
 </html>

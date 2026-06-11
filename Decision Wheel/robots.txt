@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /admin.html
+Disallow: /api/analytics/stats
 
 Sitemap: https://menu-rush.pages.dev/sitemap.xml

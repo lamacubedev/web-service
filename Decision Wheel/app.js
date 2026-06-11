@@ -33,7 +33,7 @@ const COPY = {
     heroTitle: "오늘 뭐 먹지?",
     heroDescription: "선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
     spinButton: "추천 시작", shuffleButton: "메뉴 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
-    shareButton: "결과 공유", copyButton: "링크 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "링크와 추천 결과를 복사했습니다.", sharePrompt: "오늘 뭐 먹지? Menu Rush가 {dish}을(를) 골랐어요!",
+    shareButton: "결과 공유", copyButton: "결과 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "결과를 공유할 수 있는 링크가 복사되었어요.", copyError: "복사하지 못했습니다. 브라우저의 클립보드 권한을 확인해 주세요.", sharePrompt: "오늘 뭐 먹지? Menu Rush가 {dish}을(를) 골랐어요!",
     howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "현지 시간에 맞춘 추천", feature1Text: "선택한 국가의 현지 시간과 식사 문화를 반영해 현재 시간대에 어울리는 후보를 자동으로 구성합니다.",
     feature2Title: "40개 국가별 현지 메뉴", feature2Text: "국가를 바꾸면 식사 시간뿐 아니라 추천 후보도 해당 지역의 대표 음식으로 즉시 변경됩니다.",
     feature3Title: "직접 선택과 전체 보기", feature3Text: "원하는 식사 시간만 고르거나 전체 메뉴를 섞어 더 넓은 후보에서 추천받을 수 있습니다.",
@@ -53,7 +53,7 @@ const COPY = {
     heroTitle: "What should I eat today?",
     heroDescription: "Menu Rush uses the selected country's local foods and meal schedule to suggest what fits now. Choose a meal period or mix every menu.",
     spinButton: "Start recommendation", shuffleButton: "Shuffle menus", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
-    shareButton: "Share result", copyButton: "Copy link", shareSuccess: "The share menu is open.", copySuccess: "Link and result copied.", sharePrompt: "What should I eat today? Menu Rush picked {dish}!",
+    shareButton: "Share result", copyButton: "Copy result", shareSuccess: "The share menu is open.", copySuccess: "A link for sharing the result has been copied.", copyError: "Could not copy the result. Check your browser's clipboard permission.", sharePrompt: "What should I eat today? Menu Rush picked {dish}!",
     howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Local-time recommendations", feature1Text: "The selected country's local time and dining culture determine the most suitable meal candidates.",
     feature2Title: "Local menus from 40 countries", feature2Text: "Changing the country instantly changes both meal times and candidates to representative local foods.",
     feature3Title: "Manual or all-in mode", feature3Text: "Choose one meal period or mix every menu for a broader recommendation.",
@@ -320,6 +320,7 @@ const tagCloud = {
   frame: 0,
 };
 let menuSearchCloseTimer = 0;
+let shareFeedbackTimer = 0;
 
 
 function detectCulture() {
@@ -734,7 +735,7 @@ function updateInsight() {
   const meal = state.mealMode === "auto" ? getCurrentMeal() : state.mealMode;
   const time = new Intl.DateTimeFormat(state.lang, {
     timeZone: culture.timezone,
-    hour: "2-digit",
+    hour: "numeric",
     minute: "2-digit",
   }).format(new Date());
   elements.timeInsight.textContent = t("insight", { time, meal: mealLabel(meal) });
@@ -914,11 +915,11 @@ async function shareResult() {
   try {
     if (navigator.share) {
       await navigator.share(data);
-      elements.shareFeedback.textContent = t("shareSuccess");
+      showShareFeedback("shareSuccess");
       return;
     }
-    await navigator.clipboard.writeText(`${data.text}\n${data.url}`);
-    elements.shareFeedback.textContent = t("copySuccess");
+    await writeClipboard(`${data.text}\n${data.url}`);
+    showShareFeedback("copySuccess");
   } catch (error) {
     if (error.name !== "AbortError") await copyShareLink();
   }
@@ -926,8 +927,42 @@ async function shareResult() {
 
 async function copyShareLink() {
   const data = buildShareData();
-  await navigator.clipboard.writeText(`${data.text}\n${data.url}`);
-  elements.shareFeedback.textContent = t("copySuccess");
+  try {
+    await writeClipboard(`${data.text}\n${data.url}`);
+    showShareFeedback("copySuccess");
+  } catch {
+    showShareFeedback("copyError");
+  }
+}
+
+async function writeClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch {
+      // Fall through for browsers or embedded views that deny clipboard access.
+    }
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Clipboard copy failed.");
+}
+
+function showShareFeedback(key) {
+  window.clearTimeout(shareFeedbackTimer);
+  elements.shareFeedback.textContent = t(key);
+  elements.shareFeedback.classList.add("is-visible");
+  shareFeedbackTimer = window.setTimeout(() => {
+    elements.shareFeedback.classList.remove("is-visible");
+  }, 3200);
 }
 
 function applySharedState() {

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>방문자 통계 | Menu Rush</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="./admin.css" />
+</head>
+<body>
+  <header class="admin-header">
+    <a class="admin-brand" href="./index.html"><span>M</span>Menu Rush</a>
+    <a class="home-link" href="./index.html">홈으로</a>
+  </header>
+
+  <main class="admin-main">
+    <section class="login-panel" id="loginPanel">
+      <p class="eyebrow">관리자 전용</p>
+      <h1>방문자 통계</h1>
+      <p>Cloudflare에 등록한 관리자 통계 토큰을 입력하세요. 토큰은 현재 브라우저 탭에만 보관됩니다.</p>
+      <form id="adminLoginForm">
+        <label for="adminToken">관리자 토큰</label>
+        <div class="token-row">
+          <input id="adminToken" type="password" autocomplete="current-password" required />
+          <button type="submit">통계 열기</button>
+        </div>
+        <p class="admin-status" id="loginStatus" role="status"></p>
+      </form>
+    </section>
+
+    <section class="dashboard" id="dashboard" hidden>
+      <div class="dashboard-heading">
+        <div>
+          <p class="eyebrow">관리자 전용</p>
+          <h1>방문자 통계</h1>
+          <p id="generatedAt"></p>
+        </div>
+        <div class="dashboard-actions">
+          <select id="rangeSelect" aria-label="조회 기간">
+            <option value="7">최근 7일</option>
+            <option value="30" selected>최근 30일</option>
+            <option value="90">최근 90일</option>
+          </select>
+          <button id="refreshButton" type="button">새로고침</button>
+          <button id="logoutButton" class="quiet-button" type="button">잠금</button>
+        </div>
+      </div>
+
+      <div class="summary-grid">
+        <article><span>순 방문자</span><strong id="visitorCount">0</strong></article>
+        <article><span>페이지 조회</span><strong id="pageviewCount">0</strong></article>
+        <article><span>방문자당 조회</span><strong id="viewsPerVisitor">0</strong></article>
+      </div>
+
+      <section class="panel">
+        <div class="panel-heading"><h2>일별 추이</h2></div>
+        <div class="chart" id="dailyChart" aria-label="일별 방문자 및 페이지 조회 차트"></div>
+      </section>
+
+      <div class="data-grid">
+        <section class="panel"><h2>인기 페이지</h2><div id="pagesTable"></div></section>
+        <section class="panel"><h2>접속 국가</h2><div id="countriesTable"></div></section>
+        <section class="panel"><h2>사용 언어</h2><div id="languagesTable"></div></section>
+        <section class="panel"><h2>유입 사이트</h2><div id="referrersTable"></div></section>
+      </div>
+    </section>
+  </main>
+  <script src="./admin.js"></script>
+</body>
+</html>

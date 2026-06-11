@@ -9,6 +9,8 @@ const HEADERS = [
   "회신 이메일",
   "제목",
   "문의 내용",
+  "접속 국가 코드",
+  "접속 국가",
 ];
 
 function doGet() {
@@ -42,7 +44,7 @@ function doPost(e) {
     try {
       const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
       const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
-      if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+      ensureHeaders_(sheet);
       sheet.appendRow([
         new Date(),
         safeCell_(data.serviceId),
@@ -53,6 +55,8 @@ function doPost(e) {
         safeCell_(data.email),
         safeCell_(data.subject),
         safeCell_(data.message),
+        safeCell_(data.countryCode),
+        safeCell_(data.countryName),
       ]);
     } finally {
       lock.releaseLock();
@@ -74,8 +78,13 @@ function testConfiguration() {
 
   const spreadsheet = SpreadsheetApp.openById(spreadsheetId);
   const sheet = spreadsheet.getSheetByName(SHEET_NAME) || spreadsheet.insertSheet(SHEET_NAME);
-  if (sheet.getLastRow() === 0) sheet.appendRow(HEADERS);
+  ensureHeaders_(sheet);
   console.log(`연결 성공: ${spreadsheet.getName()} / ${sheet.getName()}`);
+}
+
+function ensureHeaders_(sheet) {
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.setFrozenRows(1);
 }
 
 function safeCell_(value) {

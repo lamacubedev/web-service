@@ -267,7 +267,13 @@ window.addEventListener("menu-rush-language-change", (event) => {
 });
 
 detectSiteLocale()
-  .then((language) => localizeSiteContent(language))
+  .then(async (language) => {
+    try {
+      await localizeSiteContent(language);
+    } finally {
+      trackAnonymousPageView();
+    }
+  })
   .catch((error) => console.warn("Site localization unavailable.", error));
 
 function openInfoDrawer() {
@@ -353,4 +359,39 @@ contactForm?.addEventListener("submit", async (event) => {
     submitButton.disabled = false;
   }
 });
+
+async function trackAnonymousPageView() {
+  if (location.pathname.startsWith("/admin") || navigator.doNotTrack === "1") return;
+  let visitorId = "";
+  try {
+    visitorId = localStorage.getItem("menu-rush-visitor-id") || crypto.randomUUID();
+    localStorage.setItem("menu-rush-visitor-id", visitorId);
+  } catch {
+    visitorId = crypto.randomUUID();
+  }
+
+  const culture = new URLSearchParams(location.search).get("country")
+    || document.querySelector(".country-option[aria-checked='true']")?.dataset.culture
+    || "";
+  let referrer = "";
+  try {
+    referrer = document.referrer ? new URL(document.referrer).hostname : "";
+  } catch {
+    referrer = "";
+  }
+  fetch("/api/analytics/collect", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      visitorId,
+      path: location.pathname,
+      referrer,
+      language: document.documentElement.lang,
+      culture,
+    }),
+    keepalive: true,
+  }).catch(() => {
+    // Analytics must never interrupt the menu experience.
+  });
+}
 })();

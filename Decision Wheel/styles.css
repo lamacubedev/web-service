@@ -626,15 +626,23 @@ h3 {
 }
 
 .share-button {
-  border: 0;
-  background: var(--text);
-  color: white;
-}
-
-.copy-button {
   border: 1px solid var(--line);
   background: var(--surface);
   color: var(--text);
+}
+
+.copy-button {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: white;
+  box-shadow: 0 8px 20px rgba(19, 122, 91, 0.18);
+}
+
+.copy-button:hover,
+.copy-button:focus-visible {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  outline: none;
 }
 
 .share-button:disabled {
@@ -643,8 +651,20 @@ h3 {
 }
 
 .share-feedback {
+  display: block;
   min-height: 1.4em;
+  margin-top: 8px;
   color: var(--accent-strong) !important;
+  font-size: 0.8rem;
+  font-weight: 700;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.share-feedback.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .control-section {

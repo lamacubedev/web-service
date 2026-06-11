@@ -26,6 +26,14 @@ export async function onRequestPost({ request, env }) {
 
   if (input.website) return json({ ok: true });
 
+  const countryCode = clean(request.cf?.country, 2).toUpperCase();
+  let countryName = countryCode;
+  try {
+    countryName = new Intl.DisplayNames(["en"], { type: "region" }).of(countryCode) || countryCode;
+  } catch {
+    // The ISO code remains available when a display name cannot be resolved.
+  }
+
   const payload = {
     secret: env.CONTACT_SHARED_SECRET,
     serviceId: clean(input.serviceId, 80),
@@ -36,6 +44,8 @@ export async function onRequestPost({ request, env }) {
     email: clean(input.email, 200),
     subject: clean(input.subject, 200),
     message: clean(input.message, 5000),
+    countryCode,
+    countryName: clean(countryName, 120),
   };
 
   if (!payload.serviceId || !payload.name || !payload.email || !payload.subject || !payload.message) {
