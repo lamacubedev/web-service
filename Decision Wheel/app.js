@@ -7,6 +7,7 @@ const SUPPORTED_LANGUAGES = [
   ["pl", "Polski"], ["nl", "Nederlands"], ["sv", "Svenska"], ["no", "Norsk"],
   ["da", "Dansk"], ["he", "עברית"],
 ];
+const LANGUAGE_STORAGE_KEY = "menu-rush-language";
 
 const MEAL_LABELS = {
   ko: { auto: "자동", all: "전체", breakfast: "아침", brunch: "브런치", lunch: "점심", snack: "간식", tea: "티타임", dinner: "저녁", tapas: "타파스", supper: "가벼운 저녁", lateNight: "야식" },
@@ -328,8 +329,47 @@ function detectCulture() {
 }
 
 function detectLanguage() {
+  const requestedLanguage = new URLSearchParams(window.location.search).get("lang")?.toLowerCase();
+  if (SUPPORTED_LANGUAGES.some(([code]) => code === requestedLanguage)) return requestedLanguage;
+  try {
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (SUPPORTED_LANGUAGES.some(([code]) => code === savedLanguage)) return savedLanguage;
+  } catch {
+    // Private browsing can make storage unavailable.
+  }
   const browserLanguage = (navigator.language || "en").split("-")[0].toLowerCase();
   return SUPPORTED_LANGUAGES.some(([code]) => code === browserLanguage) ? browserLanguage : "en";
+}
+
+async function detectCloudflareLocale() {
+  if (new URLSearchParams(window.location.search).has("country")) return;
+  const requestedLanguage = new URLSearchParams(window.location.search).get("lang")?.toLowerCase();
+  let preferredLanguage = SUPPORTED_LANGUAGES.some(([code]) => code === requestedLanguage)
+    ? requestedLanguage
+    : "";
+  try {
+    const savedLanguage = localStorage.getItem(LANGUAGE_STORAGE_KEY);
+    if (!preferredLanguage && SUPPORTED_LANGUAGES.some(([code]) => code === savedLanguage)) {
+      preferredLanguage = savedLanguage;
+    }
+  } catch {
+    // Continue with country detection when storage is unavailable.
+  }
+  try {
+    const response = await fetch("/api/locale", { headers: { Accept: "application/json" } });
+    if (!response.ok) return;
+    const { country } = await response.json();
+    if (!country || !CULTURES[country]) return;
+    state.culture = country;
+    const cultureLanguage = CULTURES[country].languages[0];
+    if (preferredLanguage) {
+      state.lang = preferredLanguage;
+    } else if (SUPPORTED_LANGUAGES.some(([code]) => code === cultureLanguage)) {
+      state.lang = cultureLanguage;
+    }
+  } catch {
+    // Local static previews fall back to browser locale and timezone detection.
+  }
 }
 
 function t(key, params = {}) {
@@ -832,9 +872,15 @@ async function setLanguage(lang) {
     await ensureInterfaceTranslations(lang);
     if (request !== state.languageRequest) return;
     state.lang = lang;
+    try {
+      localStorage.setItem(LANGUAGE_STORAGE_KEY, lang);
+    } catch {
+      // The current session still uses the selected language.
+    }
     await ensureMealTranslations(lang);
     applyTranslations();
     await translateCurrentCulture();
+    window.dispatchEvent(new CustomEvent("menu-rush-language-change", { detail: { lang } }));
   } catch (error) {
     console.warn("Interface translation unavailable.", error);
     state.lang = lang;
@@ -901,6 +947,7 @@ function applySharedState() {
 }
 
 async function init() {
+  await detectCloudflareLocale();
   renderLanguageSelect();
   applySharedState();
   await ensureInterfaceTranslations(state.lang).catch((error) => console.warn("Initial translation unavailable.", error));
@@ -954,6 +1001,7 @@ async function init() {
     tagCloud.pointerY = -10000;
   });
   window.addEventListener("resize", fitVisibleText, { passive: true });
+  window.dispatchEvent(new CustomEvent("menu-rush-language-change", { detail: { lang: state.lang } }));
 }
 
 init();
