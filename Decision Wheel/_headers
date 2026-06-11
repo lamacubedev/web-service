@@ -12,3 +12,9 @@
 
 /*.js
   Cache-Control: public, max-age=86400
+
+/*.xml
+  Cache-Control: public, max-age=3600
+
+/robots.txt
+  Cache-Control: public, max-age=3600
