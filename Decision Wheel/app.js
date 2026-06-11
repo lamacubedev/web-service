@@ -509,6 +509,7 @@ function clearImageResults(messageKey = "imageEmpty") {
 
 async function searchMenuImages(rawDish) {
   const query = (IMAGE_QUERY_BY_DISH.get(rawDish) || rawDish).trim();
+  const sourceLanguage = CULTURES[state.culture].languages[0];
   const config = window.MENU_RUSH_IMAGE_SEARCH || {};
   if (!config.proxyEndpoint) {
     clearImageResults("imageUnavailable");
@@ -517,10 +518,13 @@ async function searchMenuImages(rawDish) {
 
   elements.imageGrid.innerHTML = "";
   elements.imageGrid.classList.add("is-loading");
+  elements.imageGrid.dataset.query = query;
+  elements.imageGrid.dataset.queryLanguage = sourceLanguage;
   elements.imageStatus.textContent = t("imageLoading");
   try {
     const endpoint = new URL(config.proxyEndpoint, window.location.href);
     endpoint.searchParams.set("q", query);
+    endpoint.searchParams.set("lang", sourceLanguage);
     const response = await fetch(endpoint);
     if (!response.ok) {
       if (response.status === 404 || response.status === 503) {
