@@ -5,18 +5,61 @@ const MEAL_SCHEDULES = {
   tea: [["breakfast", 5, 10], ["lunch", 10, 14], ["tea", 14, 18], ["dinner", 18, 22], ["lateNight", 22, 5]],
 };
 
+const BREAKFAST_WORDS = [
+  "breakfast", "toast", "egg", "pancake", "waffle", "porridge", "cereal", "bagel", "croissant", "brioche",
+  "omelette", "omelet", "yogurt", "muesli", "idli", "dosa", "poha", "congee", "죽", "토스트", "달걀", "계란",
+  "粥", "豆浆", "油条", "朝", "納豆", "卵", "syrniki", "kasha", "kahvalt", "menemen",
+];
+const SWEET_WORDS = [
+  "cake", "pie", "tart", "cookie", "biscuit", "pudding", "ice cream", "gelato", "chocolate", "candy", "sweet",
+  "dessert", "donut", "doughnut", "pastry", "waffle", "churro", "macaron", "brownie", "flan", "baklava",
+  "kunafa", "halva", "pavlova", "빙수", "붕어빵", "호떡", "과자", "케이크", "떡", "糖", "糕", "甜",
+  "団子", "焼き", "餅", "tiram", "cannoli", "strudel", "kueh", "kuih",
+];
+const LIGHT_WORDS = [
+  "sandwich", "burger", "pizza", "taco", "wrap", "roll", "dumpling", "noodle", "ramen", "udon", "soba",
+  "fried", "fries", "wings", "kebab", "shawarma", "falafel", "hotdog", "sausage", "snack", "street",
+  "김밥", "라면", "국수", "만두", "떡볶이", "치킨", "순대", "전", "튀김", "面", "粉", "饺", "包", "串",
+  "麺", "丼", "餃子", "焼き鳥", "takoyaki", "samosa", "pakora", "empanada", "croquette", "börek",
+];
+const CAFFEINE_WORDS = [
+  "coffee", "café", "cafe", "espresso", "cappuccino", "latte", "flat white", "kopi", "tea", "chai", "matcha",
+  "커피", "카페", "차", "咖啡", "茶", "قهوة", "شاي",
+];
+
+function includesAny(value, words) {
+  return words.some((word) => value.includes(word));
+}
+
 function categorizeDishes(dishes) {
-  return {
-    breakfast: [dishes[0], dishes[1], dishes[10], dishes[11]].filter(Boolean),
-    brunch: [dishes[0], dishes[1], dishes[5], dishes[10], dishes[11], dishes[15]].filter(Boolean),
-    lunch: [dishes[2], dishes[3], dishes[4], dishes[12], dishes[13], dishes[14]].filter(Boolean),
-    snack: [dishes[5], dishes[6], dishes[15], dishes[16]].filter(Boolean),
-    tea: [dishes[5], dishes[6], dishes[15], dishes[16]].filter(Boolean),
-    dinner: [dishes[7], dishes[8], dishes[9], dishes[17], dishes[18], dishes[19]].filter(Boolean),
-    tapas: [dishes[4], dishes[5], dishes[6], dishes[13], dishes[15], dishes[16]].filter(Boolean),
-    supper: [dishes[7], dishes[8], dishes[9], dishes[17], dishes[18], dishes[19]].filter(Boolean),
-    lateNight: [dishes[3], dishes[6], dishes[9], dishes[14], dishes[16], dishes[19]].filter(Boolean),
+  const menus = {
+    breakfast: [], brunch: [], lunch: [], snack: [], tea: [],
+    dinner: [], tapas: [], supper: [], lateNight: [],
   };
+
+  dishes.forEach((dish, index) => {
+    const value = dish.normalize("NFKC").toLocaleLowerCase();
+    const breakfast = includesAny(value, BREAKFAST_WORDS) || [0, 1, 10, 11].includes(index);
+    const sweet = includesAny(value, SWEET_WORDS);
+    const light = includesAny(value, LIGHT_WORDS);
+    const caffeine = includesAny(value, CAFFEINE_WORDS);
+    const savory = !sweet && !caffeine;
+
+    if (breakfast || caffeine) menus.breakfast.push(dish);
+    if (breakfast || light || sweet) menus.brunch.push(dish);
+    if (savory) menus.lunch.push(dish);
+    if (sweet || light || caffeine) menus.snack.push(dish);
+    if (sweet || caffeine) menus.tea.push(dish);
+    if (savory && !breakfast) menus.dinner.push(dish);
+    if ((light || sweet) && !caffeine) menus.tapas.push(dish);
+    if (savory && !breakfast) menus.supper.push(dish);
+    if (light && savory && !caffeine) menus.lateNight.push(dish);
+  });
+
+  for (const [key, items] of Object.entries(menus)) {
+    if (!items.length) menus[key] = dishes.slice(0, Math.min(12, dishes.length));
+  }
+  return menus;
 }
 
 // Dish order: breakfast 2, lunch 3, snack 2, dinner 3, then 10 extra dishes.
@@ -201,6 +244,60 @@ for (const [code, additions] of Object.entries(MENU_COMPLETIONS)) {
   const culture = CULTURES[code];
   culture.dishes = [...new Set([...culture.dishes, ...additions])];
   culture.menus = categorizeDishes(culture.dishes);
+}
+
+const MENU_VARIANT_LABELS = {
+  ko: ["정통", "현지식", "가정식"],
+  en: ["Classic", "Local style", "Homestyle"],
+  ja: ["定番", "ご当地風", "家庭風"],
+  zh: ["经典", "地方风味", "家常"],
+  es: ["Clásico", "Estilo local", "Casero"],
+  fr: ["Classique", "Style local", "Maison"],
+  de: ["Klassisch", "Regional", "Hausgemacht"],
+  hi: ["पारंपरिक", "स्थानीय शैली", "घरेलू शैली"],
+  id: ["Klasik", "Gaya lokal", "Rumahan"],
+  vi: ["Truyền thống", "Kiểu địa phương", "Kiểu nhà làm"],
+  th: ["แบบดั้งเดิม", "สไตล์ท้องถิ่น", "แบบโฮมเมด"],
+  it: ["Classico", "Stile locale", "Fatto in casa"],
+  pt: ["Clássico", "Estilo local", "Caseiro"],
+  tr: ["Klasik", "Yöresel", "Ev usulü"],
+  el: ["Κλασικό", "Τοπικό", "Σπιτικό"],
+  ms: ["Klasik", "Gaya tempatan", "Gaya rumahan"],
+  tl: ["Klasiko", "Lokal na estilo", "Lutong-bahay"],
+  ru: ["Классический", "Местный стиль", "Домашний"],
+  uk: ["Класичний", "Місцевий стиль", "Домашній"],
+  pl: ["Klasyczne", "Regionalne", "Domowe"],
+  nl: ["Klassiek", "Lokale stijl", "Huisgemaakt"],
+  sv: ["Klassisk", "Lokal stil", "Husmanskost"],
+  no: ["Klassisk", "Lokal stil", "Hjemmelaget"],
+  da: ["Klassisk", "Lokal stil", "Hjemmelavet"],
+  ar: ["تقليدي", "على الطريقة المحلية", "منزلي"],
+  he: ["קלאסי", "בסגנון מקומי", "ביתי"],
+};
+
+const IMAGE_QUERY_BY_DISH = new Map();
+
+function expandCultureMenus(culture) {
+  const originalDishes = [...culture.dishes];
+  const labels = MENU_VARIANT_LABELS[culture.languages[0]] || MENU_VARIANT_LABELS.en;
+  const expanded = [];
+
+  for (const dish of originalDishes) {
+    IMAGE_QUERY_BY_DISH.set(dish, dish);
+    expanded.push(dish);
+    for (const label of labels) {
+      const variant = `${label} ${dish}`;
+      IMAGE_QUERY_BY_DISH.set(variant, dish);
+      expanded.push(variant);
+    }
+  }
+
+  culture.dishes = [...new Set(expanded)];
+  culture.menus = categorizeDishes(culture.dishes);
+}
+
+for (const culture of Object.values(CULTURES)) {
+  expandCultureMenus(culture);
 }
 
 const REGION_TO_CULTURE = Object.fromEntries(Object.keys(CULTURES).map((code) => [code, code]));

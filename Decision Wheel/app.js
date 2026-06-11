@@ -191,6 +191,25 @@ async function translateBatch(texts, source, target) {
   return parts.map((part) => part.trim());
 }
 
+async function translateInChunks(texts, source, target, maxCharacters = 1400) {
+  const translated = [];
+  let chunk = [];
+  let chunkLength = 0;
+
+  for (const text of texts) {
+    const nextLength = chunkLength + text.length + TRANSLATION_SEPARATOR.length;
+    if (chunk.length && nextLength > maxCharacters) {
+      translated.push(...await translateBatch(chunk, source, target));
+      chunk = [];
+      chunkLength = 0;
+    }
+    chunk.push(text);
+    chunkLength += text.length + TRANSLATION_SEPARATOR.length;
+  }
+  if (chunk.length) translated.push(...await translateBatch(chunk, source, target));
+  return translated;
+}
+
 async function ensureInterfaceTranslations(lang) {
   if (lang === "ko" || lang === "en") return;
   const keys = Object.keys(COPY.en).filter((key) => key !== "brand");
@@ -238,7 +257,7 @@ async function ensureDishTranslations(cultureCode, lang) {
   if (!englishNames || !culture.dishes.every((dish) => englishNames[dish])) {
     const detectedEnglish = source === "en"
       ? culture.dishes
-      : await translateBatch(culture.dishes, "auto", "en");
+      : await translateInChunks(culture.dishes, "auto", "en");
     englishNames = Object.fromEntries(culture.dishes.map((dish, index) => [
       dish,
       DISH_TRANSLATIONS.en?.[dish] || detectedEnglish[index],
@@ -249,7 +268,7 @@ async function ensureDishTranslations(cultureCode, lang) {
     dishTranslationsByLocale.set(mapKey, englishNames);
     return;
   }
-  const translated = await translateBatch(culture.dishes.map((dish) => englishNames[dish]), "en", lang);
+  const translated = await translateInChunks(culture.dishes.map((dish) => englishNames[dish]), "en", lang);
   const localized = Object.fromEntries(culture.dishes.map((dish, index) => [
     dish,
     DISH_TRANSLATIONS[lang]?.[dish] || translated[index],
@@ -332,7 +351,7 @@ function getCurrentMeal() {
 
 function getActiveMealKeys() {
   if (state.mealMode === "all") return Object.keys(CULTURES[state.culture].menus);
-  if (state.mealMode === "auto") return Object.keys(CULTURES[state.culture].menus);
+  if (state.mealMode === "auto") return [getCurrentMeal()];
   return [state.mealMode];
 }
 
@@ -345,8 +364,9 @@ function shuffle(items) {
 
 function buildItems({ preserveResult = false } = {}) {
   const culture = CULTURES[state.culture];
-  const useAllMenus = state.mealMode === "auto" || state.mealMode === "all";
-  const pool = useAllMenus ? culture.dishes : getActiveMealKeys().flatMap((key) => culture.menus[key] || []);
+  const pool = state.mealMode === "all"
+    ? culture.dishes
+    : getActiveMealKeys().flatMap((key) => culture.menus[key] || []);
   const allMenus = uniqueDishes(culture.dishes);
   state.items = shuffle(uniqueDishes(pool.length ? pool : allMenus));
   elements.machine.dataset.candidateCount = String(state.items.length);
@@ -488,7 +508,7 @@ function clearImageResults(messageKey = "imageEmpty") {
 }
 
 async function searchMenuImages(rawDish) {
-  const query = displayDish(rawDish).trim();
+  const query = (IMAGE_QUERY_BY_DISH.get(rawDish) || rawDish).trim();
   const config = window.MENU_RUSH_IMAGE_SEARCH || {};
   if (!config.proxyEndpoint) {
     clearImageResults("imageUnavailable");
