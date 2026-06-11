@@ -501,8 +501,6 @@ async function searchMenuImages(rawDish) {
   try {
     const endpoint = new URL(config.proxyEndpoint, window.location.href);
     endpoint.searchParams.set("q", query);
-    endpoint.searchParams.set("hl", state.lang);
-    endpoint.searchParams.set("gl", state.culture.toLowerCase());
     const response = await fetch(endpoint);
     if (!response.ok) {
       if (response.status === 404 || response.status === 503) {
