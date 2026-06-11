@@ -1,5 +1,5 @@
 window.MENU_RUSH_CONTACT = {
   endpoint: "/api/contact",
-  serviceId: "menu-rush",
-  serviceName: "Menu Rush",
+  serviceId: "menu-roulette-rush",
+  serviceName: "Menu Roulette Rush",
 };

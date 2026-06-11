@@ -25,3 +25,10 @@
 
 /api/analytics/*
   Cache-Control: no-store
+
+/share
+  Cache-Control: public, max-age=300
+  X-Robots-Tag: noindex, follow
+
+/share-images/*
+  Cache-Control: public, max-age=604800

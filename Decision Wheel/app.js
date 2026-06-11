@@ -29,40 +29,42 @@ const MEAL_LABELS = {
 
 const COPY = {
   ko: {
-    brand: "Menu Rush", navHow: "기능 소개", navAbout: "사이트 소개", navPrivacy: "개인정보처리방침", languageLabel: "언어",
+    brand: "Menu Roulette Rush", navHow: "기능 소개", navAbout: "사이트 소개", navPrivacy: "개인정보처리방침", languageLabel: "언어",
     heroTitle: "오늘 뭐 먹지?",
-    heroDescription: "선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
+    heroDescription: "40개 국가의 식사 문화와 현지 메뉴를 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
+    heroResultDescription: "40개 국가의 식사 문화와 현지 메뉴를 반영한 추천 메뉴는 {dish}입니다.",
     spinButton: "추천 시작", shuffleButton: "메뉴 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
-    shareButton: "결과 공유", copyButton: "결과 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "결과를 공유할 수 있는 링크가 복사되었어요.", copyError: "복사하지 못했습니다. 브라우저의 클립보드 권한을 확인해 주세요.", sharePrompt: "오늘 뭐 먹지? Menu Rush가 {dish}을(를) 골랐어요!",
+    shareButton: "결과 공유", copyButton: "결과 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "{language}로 결과를 공유할 수 있는 링크가 복사되었어요.", copyError: "복사하지 못했습니다. 브라우저의 클립보드 권한을 확인해 주세요.", sharePrompt: "오늘 뭐 먹지? Menu Roulette Rush가 {dish}을(를) 골랐어요!",
     howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "현지 시간에 맞춘 추천", feature1Text: "선택한 국가의 현지 시간과 식사 문화를 반영해 현재 시간대에 어울리는 후보를 자동으로 구성합니다.",
     feature2Title: "40개 국가별 현지 메뉴", feature2Text: "국가를 바꾸면 식사 시간뿐 아니라 추천 후보도 해당 지역의 대표 음식으로 즉시 변경됩니다.",
     feature3Title: "직접 선택과 전체 보기", feature3Text: "원하는 식사 시간만 고르거나 전체 메뉴를 섞어 더 넓은 후보에서 추천받을 수 있습니다.",
     aboutEyebrow: "소개", aboutTitle: "메뉴 선택을 위한 가벼운 도구",
-    aboutText1: "Menu Rush는 매일 반복되는 메뉴 고민을 줄이기 위한 음식 추천 도구입니다. 가입이나 설치 없이 국가와 식사 시간을 선택해 바로 사용할 수 있습니다.",
+    aboutText1: "Menu Roulette Rush는 매일 반복되는 메뉴 고민을 줄이기 위한 음식 추천 도구입니다. 가입이나 설치 없이 국가와 식사 시간을 선택해 바로 사용할 수 있습니다.",
     aboutText2: "추천은 지역별 메뉴와 일반적인 식사 시간 분류를 바탕으로 무작위 생성됩니다. 알레르기, 건강 상태, 종교적 식단 제한, 영업 여부와 개인 선호는 사용자가 최종 확인해야 합니다.",
     privacyEyebrow: "개인정보", privacyTitle: "개인정보처리방침",
     privacyText1: "본 사이트는 회원가입, 이름, 이메일, 전화번호 등 직접 식별 가능한 개인정보를 요구하지 않습니다. 언어, 시간대, 현지 시각 정보는 사용자의 기기 안에서 메뉴 추천을 위해 처리됩니다. 번역 요청에는 공개된 화면 문구와 메뉴명만 포함되며 개인 식별 정보는 포함되지 않습니다.",
     privacyText2: "향후 Google AdSense, Google Analytics 또는 유사한 제3자 서비스가 도입될 수 있습니다. 이 경우 쿠키 또는 광고 식별자가 사용될 수 있으며 브라우저 설정에서 제한하거나 삭제할 수 있습니다.",
     privacyText3: "본 사이트는 Cloudflare Pages와 같은 정적 호스팅 환경에서 제공될 수 있습니다. 호스팅 사업자는 보안과 오류 대응을 위해 표준 서버 로그를 처리할 수 있습니다.",
-    footer: "Menu Rush는 간단한 참고용 메뉴 추천 도구입니다.", footerPrivacy: "개인정보처리방침",
+    footer: "Menu Roulette Rush는 간단한 참고용 메뉴 추천 도구입니다.", footerPrivacy: "개인정보처리방침",
     insight: "{time} 기준 {meal} 메뉴입니다.", region: "{region} 식사 문화 기준", ready: "준비", running: "선택 중", done: "결정", candidateCount: "메뉴 {count}개",
     imageEyebrow: "관련 이미지 검색", imageTitle: "추천 메뉴 이미지", imageProviders: "Unsplash + Pexels", imageEmpty: "메뉴가 결정되면 관련 이미지가 표시됩니다.", imageLoading: "Unsplash와 Pexels에서 메뉴 이미지를 검색하고 있습니다.", imageUnavailable: "Unsplash 또는 Pexels API 설정이 필요합니다.", imageError: "이미지를 불러오지 못했습니다.", openNewWindow: "새 창에서 열기",
   },
   en: {
-    brand: "Menu Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
+    brand: "Menu Roulette Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
     heroTitle: "What should I eat today?",
-    heroDescription: "Menu Rush uses the selected country's local foods and meal schedule to suggest what fits now. Choose a meal period or mix every menu.",
+    heroDescription: "Menu Roulette Rush uses dining cultures and local menus from 40 countries to suggest what fits now. Choose a meal period or mix every menu.",
+    heroResultDescription: "Using dining cultures and local menus from 40 countries, the recommended menu is {dish}.",
     spinButton: "Start recommendation", shuffleButton: "Shuffle menus", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
-    shareButton: "Share result", copyButton: "Copy result", shareSuccess: "The share menu is open.", copySuccess: "A link for sharing the result has been copied.", copyError: "Could not copy the result. Check your browser's clipboard permission.", sharePrompt: "What should I eat today? Menu Rush picked {dish}!",
+    shareButton: "Share result", copyButton: "Copy result", shareSuccess: "The share menu is open.", copySuccess: "A link for sharing the result in {language} has been copied.", copyError: "Could not copy the result. Check your browser's clipboard permission.", sharePrompt: "What should I eat today? Menu Roulette Rush picked {dish}!",
     howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Local-time recommendations", feature1Text: "The selected country's local time and dining culture determine the most suitable meal candidates.",
     feature2Title: "Local menus from 40 countries", feature2Text: "Changing the country instantly changes both meal times and candidates to representative local foods.",
     feature3Title: "Manual or all-in mode", feature3Text: "Choose one meal period or mix every menu for a broader recommendation.",
-    aboutEyebrow: "About", aboutTitle: "A lightweight menu decision tool", aboutText1: "Menu Rush helps reduce everyday menu indecision. Choose a country and meal period without creating an account or installing an app.",
+    aboutEyebrow: "About", aboutTitle: "A lightweight menu decision tool", aboutText1: "Menu Roulette Rush helps reduce everyday menu indecision. Choose a country and meal period without creating an account or installing an app.",
     aboutText2: "Suggestions are randomly generated from regional menus and general meal-time categories. Please verify allergies, health needs, dietary restrictions, opening hours, and personal preferences.",
     privacyEyebrow: "Privacy", privacyTitle: "Privacy Policy", privacyText1: "This site does not request directly identifiable personal data. Language, time zone, and local time are processed on your device. Translation requests contain only public interface text and food names, never personal identifiers.",
     privacyText2: "Google AdSense, Google Analytics, or similar services may be added later and may use cookies or advertising identifiers.",
     privacyText3: "This site may be hosted on Cloudflare Pages. Hosting providers may process standard server logs for security and reliability.",
-    footer: "Menu Rush is a lightweight food suggestion tool.", footerPrivacy: "Privacy Policy",
+    footer: "Menu Roulette Rush is a lightweight food suggestion tool.", footerPrivacy: "Privacy Policy",
     insight: "{meal} picks for {time}.", region: "{region} dining culture", ready: "READY", running: "PICKING", done: "SELECTED", candidateCount: "{count} menus",
     imageEyebrow: "Related image search", imageTitle: "Recommended menu images", imageProviders: "Unsplash + Pexels", imageEmpty: "Related images appear after a menu is selected.", imageLoading: "Searching Unsplash and Pexels for menu images.", imageUnavailable: "Unsplash or Pexels API configuration is required.", imageError: "Images could not be loaded.", openNewWindow: "Open in a new window",
   },
@@ -150,8 +152,9 @@ const DISH_TRANSLATIONS = {
   },
 };
 
-const TRANSLATION_CACHE_VERSION = "v6";
+const TRANSLATION_CACHE_VERSION = "v7";
 const TRANSLATION_SEPARATOR = "\n[[[MENU_RUSH_SPLIT]]]\n";
+const BRAND_TRANSLATION_PLACEHOLDER = "[[[MENU_ROULETTE_RUSH_BRAND]]]";
 const API_LANGUAGE_CODES = { zh: "zh-CN", he: "iw" };
 const dishTranslationsByLocale = new Map();
 
@@ -177,19 +180,20 @@ function cacheWrite(key, value) {
 
 async function translateBatch(texts, source, target) {
   if (source === target || !texts.length) return texts;
+  const protectedTexts = texts.map((text) => text.replaceAll("Menu Roulette Rush", BRAND_TRANSLATION_PLACEHOLDER));
   const endpoint = new URL("https://translate.googleapis.com/translate_a/single");
   endpoint.searchParams.set("client", "gtx");
   endpoint.searchParams.set("sl", translationLanguage(source));
   endpoint.searchParams.set("tl", translationLanguage(target));
   endpoint.searchParams.set("dt", "t");
-  endpoint.searchParams.set("q", texts.join(TRANSLATION_SEPARATOR));
+  endpoint.searchParams.set("q", protectedTexts.join(TRANSLATION_SEPARATOR));
   const response = await fetch(endpoint);
   if (!response.ok) throw new Error(`Translation request failed: ${response.status}`);
   const payload = await response.json();
   const translated = payload[0].map((part) => part[0]).join("");
   const parts = translated.split(/\s*\[\[\[MENU_RUSH_SPLIT\]\]\]\s*/);
   if (parts.length !== texts.length) throw new Error("Translation response could not be separated.");
-  return parts.map((part) => part.trim());
+  return parts.map((part) => part.trim().replaceAll(BRAND_TRANSLATION_PLACEHOLDER, "Menu Roulette Rush"));
 }
 
 async function translateInChunks(texts, source, target, maxCharacters = 1400) {
@@ -216,11 +220,11 @@ async function ensureInterfaceTranslations(lang) {
   const keys = Object.keys(COPY.en).filter((key) => key !== "brand");
   const cached = cacheRead(`ui:${lang}`);
   if (cached && keys.every((key) => cached[key])) {
-    COPY[lang] = { ...cached, brand: "Menu Rush" };
+    COPY[lang] = { ...cached, brand: "Menu Roulette Rush" };
   } else {
     const translated = await translateBatch(keys.map((key) => COPY.en[key]), "en", lang);
     COPY[lang] = Object.fromEntries(keys.map((key, index) => [key, translated[index]]));
-    COPY[lang].brand = "Menu Rush";
+    COPY[lang].brand = "Menu Roulette Rush";
     cacheWrite(`ui:${lang}`, COPY[lang]);
   }
   await ensureMealTranslations(lang);
@@ -280,6 +284,7 @@ async function ensureDishTranslations(cultureCode, lang) {
 
 const elements = {
   languageSelect: document.querySelector("#languageSelect"),
+  heroDescription: document.querySelector(".hero-description"),
   mealControls: document.querySelector("#mealControls"),
   resultText: document.querySelector("#resultText"),
   timeInsight: document.querySelector("#timeInsight"),
@@ -430,6 +435,7 @@ function buildItems({ preserveResult = false } = {}) {
   renderSlotPreview();
   renderTagCloud();
   updateInsight();
+  updateHeroDescription();
 }
 
 function uniqueDishes(items) {
@@ -742,6 +748,13 @@ function updateInsight() {
   elements.detectedRegion.textContent = t("region", { region: localizedCountryName(state.culture) });
 }
 
+function updateHeroDescription() {
+  const dish = elements.resultText.dataset.dish;
+  elements.heroDescription.textContent = dish
+    ? t("heroResultDescription", { dish: displayDish(dish) })
+    : t("heroDescription");
+}
+
 function setSlotTexts(centerIndex) {
   const items = state.items;
   const length = items.length;
@@ -796,6 +809,7 @@ async function runMenuMachine() {
     const winningDish = state.items[winnerIndex];
     elements.resultText.textContent = displayDish(winningDish);
     elements.resultText.dataset.dish = winningDish;
+    updateHeroDescription();
     updateMenuSearchLinks(winningDish);
     fitVisibleText();
     elements.shareButton.disabled = false;
@@ -826,7 +840,7 @@ function applyTranslations() {
   document.querySelectorAll("[data-i18n]").forEach((element) => {
     element.textContent = t(element.dataset.i18n);
   });
-  document.title = `${t("heroTitle")} | Menu Rush`;
+  document.title = `${t("heroTitle")} | Menu Roulette Rush`;
   renderMealControls();
   renderCountryPicker();
   if (elements.resultText.dataset.dish) {
@@ -836,6 +850,7 @@ function applyTranslations() {
   } else {
     renderSlotPreview();
   }
+  updateHeroDescription();
   renderTagCloud();
   updateInsight();
   updateNewWindowLabels();
@@ -856,6 +871,7 @@ async function translateCurrentCulture() {
     renderTagCloud();
     if (elements.resultText.dataset.dish) {
       elements.resultText.textContent = displayDish(elements.resultText.dataset.dish);
+      updateHeroDescription();
       fitVisibleText();
     }
   } catch (error) {
@@ -898,13 +914,16 @@ async function setLanguage(lang) {
 function buildShareData() {
   const rawDish = elements.resultText.dataset.dish;
   const dish = rawDish ? displayDish(rawDish) : "";
-  const url = new URL(window.location.href);
-  url.search = "";
+  const url = new URL("/share", window.location.origin);
+  url.searchParams.set("lang", state.lang);
   url.searchParams.set("country", state.culture);
   url.searchParams.set("meal", state.mealMode);
-  if (rawDish) url.searchParams.set("dish", rawDish);
+  if (rawDish) {
+    url.searchParams.set("dish", rawDish);
+    url.searchParams.set("label", dish);
+  }
   return {
-    title: t("heroTitle"),
+    title: `${t("heroTitle")} | Menu Roulette Rush`,
     text: t("sharePrompt", { dish }),
     url: url.toString(),
   };
@@ -958,7 +977,13 @@ async function writeClipboard(text) {
 
 function showShareFeedback(key) {
   window.clearTimeout(shareFeedbackTimer);
-  elements.shareFeedback.textContent = t(key);
+  let language = state.lang;
+  try {
+    language = new Intl.DisplayNames([state.lang], { type: "language" }).of(state.lang) || state.lang;
+  } catch {
+    language = state.lang;
+  }
+  elements.shareFeedback.textContent = t(key, { language });
   elements.shareFeedback.classList.add("is-visible");
   shareFeedbackTimer = window.setTimeout(() => {
     elements.shareFeedback.classList.remove("is-visible");
@@ -975,6 +1000,7 @@ function applySharedState() {
   if (dish && CULTURES[state.culture].dishes.includes(dish)) {
     elements.resultText.textContent = displayDish(dish);
     elements.resultText.dataset.dish = dish;
+    updateHeroDescription();
     elements.shareButton.disabled = false;
     updateMenuSearchLinks(dish);
     fitVisibleText();

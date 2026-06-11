@@ -17,7 +17,7 @@ function doGet() {
   const properties = PropertiesService.getScriptProperties();
   return jsonOutput_({
     ok: true,
-    service: "menu-rush-contact",
+    service: "menu-roulette-rush-contact",
     configured: Boolean(
       properties.getProperty("CONTACT_SHARED_SECRET")
       && properties.getProperty("CONTACT_SPREADSHEET_ID")

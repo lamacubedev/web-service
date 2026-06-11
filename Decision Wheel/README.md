@@ -1,4 +1,4 @@
-# Menu Rush
+﻿# Menu Roulette Rush
 
 Static global food picker for Cloudflare Pages. The slot-style menu machine uses
 country-specific meal schedules and 2,000 local menu entries from 40 countries.
@@ -111,7 +111,7 @@ The project includes a first-party analytics collector and the private
 is hashed in the Pages Function with a server-side secret before it reaches D1.
 Events older than 396 days are deleted automatically.
 
-1. In Cloudflare, create a D1 database such as `menu-rush-analytics`.
+1. In Cloudflare, create a D1 database such as `menu-roulette-rush-analytics`.
 2. Open the D1 console and execute `analytics-schema.sql`.
 3. In Pages > Settings > Bindings, add the D1 database with variable name
    `ANALYTICS_DB`.
@@ -149,3 +149,4 @@ and `sitemap.xml` when connecting a custom domain.
 - `site-info.css`, `site-info.js`: shared information-page and drawer behavior
 - `sitemap.xml`, `robots.txt`: search discovery configuration
 - `_headers`: Cloudflare Pages security and cache headers
+

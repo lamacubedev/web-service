@@ -38,11 +38,14 @@ function createInfoLanguageSelect() {
   if (!actions) return null;
 
   const wrapper = document.createElement("label");
-  wrapper.className = "info-language-control";
-  wrapper.setAttribute("data-no-translate", "");
+  wrapper.className = "language-picker info-language-control";
+
+  const label = document.createElement("span");
+  label.textContent = "언어";
 
   const select = document.createElement("select");
   select.id = "infoLanguageSelect";
+  select.setAttribute("data-no-translate", "");
   select.setAttribute("aria-label", "Language");
   SITE_LANGUAGE_OPTIONS.forEach(([code, label]) => {
     const option = document.createElement("option");
@@ -60,7 +63,7 @@ function createInfoLanguageSelect() {
     await localizeSiteContent(language);
   });
 
-  wrapper.appendChild(select);
+  wrapper.append(label, select);
   actions.prepend(wrapper);
   return select;
 }
@@ -123,7 +126,7 @@ function cacheWrite(language, value) {
 
 async function translateChunk(texts, target) {
   if (target === "ko" || !texts.length) return texts;
-  const protectedTexts = texts.map((text) => text.replaceAll("Menu Rush", BRAND_PLACEHOLDER));
+  const protectedTexts = texts.map((text) => text.replaceAll("Menu Roulette Rush", BRAND_PLACEHOLDER));
   const endpoint = new URL("https://translate.googleapis.com/translate_a/single");
   endpoint.searchParams.set("client", "gtx");
   endpoint.searchParams.set("sl", "ko");
@@ -137,13 +140,13 @@ async function translateChunk(texts, target) {
   const parts = translated.split(/\s*\[\[\[MENU_RUSH_SITE_SPLIT\]\]\]\s*/);
   if (parts.length !== texts.length) {
     if (texts.length === 1) {
-      return [translated.trim().replaceAll(BRAND_PLACEHOLDER, "Menu Rush")];
+      return [translated.trim().replaceAll(BRAND_PLACEHOLDER, "Menu Roulette Rush")];
     }
     return Promise.all(
       texts.map(async (text) => (await translateChunk([text], target))[0]),
     );
   }
-  return parts.map((part) => part.trim().replaceAll(BRAND_PLACEHOLDER, "Menu Rush"));
+  return parts.map((part) => part.trim().replaceAll(BRAND_PLACEHOLDER, "Menu Roulette Rush"));
 }
 
 async function translateTexts(texts, target) {

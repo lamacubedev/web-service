@@ -2,5 +2,6 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 Disallow: /api/analytics/stats
+Disallow: /share
 
 Sitemap: https://menu-rush.pages.dev/sitemap.xml
