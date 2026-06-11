@@ -33,19 +33,19 @@ const COPY = {
     heroDescription: "선택한 나라의 현지 음식과 식사 시간을 반영해 지금 먹기 좋은 메뉴를 추천합니다. 직접 식사 시간을 고르거나 모든 메뉴를 한 번에 섞을 수도 있습니다.",
     spinButton: "추천 시작", shuffleButton: "메뉴 섞기", resultLabel: "추천 메뉴", mealMode: "식사 시간", countryProfile: "식사 문화 기준",
     shareButton: "결과 공유", copyButton: "링크 복사", shareSuccess: "공유 메뉴를 열었습니다.", copySuccess: "링크와 추천 결과를 복사했습니다.", sharePrompt: "오늘 뭐 먹지? Menu Rush가 {dish}을(를) 골랐어요!",
-    howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "시간대 기반 추천", feature1Text: "브라우저의 시간대 정보를 활용해 현재 시각에 어울리는 식사 구간을 자동으로 선택합니다.",
+    howEyebrow: "기능", howTitle: "음식 선택을 빠르고 가볍게", feature1Title: "현지 시간에 맞춘 추천", feature1Text: "선택한 국가의 현지 시간과 식사 문화를 반영해 현재 시간대에 어울리는 후보를 자동으로 구성합니다.",
     feature2Title: "40개 국가별 현지 메뉴", feature2Text: "국가를 바꾸면 식사 시간뿐 아니라 추천 후보도 해당 지역의 대표 음식으로 즉시 변경됩니다.",
     feature3Title: "직접 선택과 전체 보기", feature3Text: "원하는 식사 시간만 고르거나 전체 메뉴를 섞어 더 넓은 후보에서 추천받을 수 있습니다.",
-    aboutEyebrow: "소개", aboutTitle: "사이트 소개",
-    aboutText1: "이 웹사이트는 매일 반복되는 메뉴 고민을 줄이기 위해 만든 슬롯형 음식 추천 도구입니다. 별도의 가입이나 앱 설치 없이 바로 사용할 수 있습니다.",
-    aboutText2: "추천 결과는 일반적인 식사 시간, 지역별 식문화, 메뉴 후보 목록을 바탕으로 무작위 생성됩니다. 실제 영업 여부, 알레르기, 건강 상태, 종교적 식단 제한과 개인 선호도는 사용자가 확인해야 합니다.",
+    aboutEyebrow: "소개", aboutTitle: "메뉴 선택을 위한 가벼운 도구",
+    aboutText1: "Menu Rush는 매일 반복되는 메뉴 고민을 줄이기 위한 음식 추천 도구입니다. 가입이나 설치 없이 국가와 식사 시간을 선택해 바로 사용할 수 있습니다.",
+    aboutText2: "추천은 지역별 메뉴와 일반적인 식사 시간 분류를 바탕으로 무작위 생성됩니다. 알레르기, 건강 상태, 종교적 식단 제한, 영업 여부와 개인 선호는 사용자가 최종 확인해야 합니다.",
     privacyEyebrow: "개인정보", privacyTitle: "개인정보처리방침",
     privacyText1: "본 사이트는 회원가입, 이름, 이메일, 전화번호 등 직접 식별 가능한 개인정보를 요구하지 않습니다. 언어, 시간대, 현지 시각 정보는 사용자의 기기 안에서 메뉴 추천을 위해 처리됩니다. 번역 요청에는 공개된 화면 문구와 메뉴명만 포함되며 개인 식별 정보는 포함되지 않습니다.",
     privacyText2: "향후 Google AdSense, Google Analytics 또는 유사한 제3자 서비스가 도입될 수 있습니다. 이 경우 쿠키 또는 광고 식별자가 사용될 수 있으며 브라우저 설정에서 제한하거나 삭제할 수 있습니다.",
     privacyText3: "본 사이트는 Cloudflare Pages와 같은 정적 호스팅 환경에서 제공될 수 있습니다. 호스팅 사업자는 보안과 오류 대응을 위해 표준 서버 로그를 처리할 수 있습니다.",
     footer: "Menu Rush는 간단한 참고용 메뉴 추천 도구입니다.", footerPrivacy: "개인정보처리방침",
     insight: "{time} 기준 {meal} 메뉴입니다.", region: "{region} 식사 문화 기준", ready: "준비", running: "선택 중", done: "결정", candidateCount: "메뉴 {count}개",
-    imageEyebrow: "이미지 검색", imageTitle: "추천 메뉴 이미지", imageProviders: "Unsplash + Pexels", imageEmpty: "메뉴가 결정되면 관련 이미지가 표시됩니다.", imageLoading: "Unsplash와 Pexels에서 메뉴 이미지를 검색하고 있습니다.", imageUnavailable: "Unsplash 또는 Pexels API 설정이 필요합니다.", imageError: "이미지를 불러오지 못했습니다.", openNewWindow: "새 창에서 열기",
+    imageEyebrow: "관련 이미지 검색", imageTitle: "추천 메뉴 이미지", imageProviders: "Unsplash + Pexels", imageEmpty: "메뉴가 결정되면 관련 이미지가 표시됩니다.", imageLoading: "Unsplash와 Pexels에서 메뉴 이미지를 검색하고 있습니다.", imageUnavailable: "Unsplash 또는 Pexels API 설정이 필요합니다.", imageError: "이미지를 불러오지 못했습니다.", openNewWindow: "새 창에서 열기",
   },
   en: {
     brand: "Menu Rush", navHow: "Features", navAbout: "About", navPrivacy: "Privacy", languageLabel: "Language",
@@ -53,17 +53,17 @@ const COPY = {
     heroDescription: "Menu Rush uses the selected country's local foods and meal schedule to suggest what fits now. Choose a meal period or mix every menu.",
     spinButton: "Start recommendation", shuffleButton: "Shuffle menus", resultLabel: "Recommendation", mealMode: "Meal time", countryProfile: "Dining culture",
     shareButton: "Share result", copyButton: "Copy link", shareSuccess: "The share menu is open.", copySuccess: "Link and result copied.", sharePrompt: "What should I eat today? Menu Rush picked {dish}!",
-    howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Time-aware picks", feature1Text: "Browser time-zone information automatically selects a suitable meal period.",
+    howEyebrow: "Feature", howTitle: "A faster way to decide food", feature1Title: "Local-time recommendations", feature1Text: "The selected country's local time and dining culture determine the most suitable meal candidates.",
     feature2Title: "Local menus from 40 countries", feature2Text: "Changing the country instantly changes both meal times and candidates to representative local foods.",
     feature3Title: "Manual or all-in mode", feature3Text: "Choose one meal period or mix every menu for a broader recommendation.",
-    aboutEyebrow: "About", aboutTitle: "About this site", aboutText1: "This is a slot-style food suggestion tool designed to reduce everyday menu indecision. No account or installation is required.",
-    aboutText2: "Results are randomly generated from general meal times, regional food culture, and menu lists. Please check opening hours, allergies, health needs, dietary restrictions, and preferences.",
+    aboutEyebrow: "About", aboutTitle: "A lightweight menu decision tool", aboutText1: "Menu Rush helps reduce everyday menu indecision. Choose a country and meal period without creating an account or installing an app.",
+    aboutText2: "Suggestions are randomly generated from regional menus and general meal-time categories. Please verify allergies, health needs, dietary restrictions, opening hours, and personal preferences.",
     privacyEyebrow: "Privacy", privacyTitle: "Privacy Policy", privacyText1: "This site does not request directly identifiable personal data. Language, time zone, and local time are processed on your device. Translation requests contain only public interface text and food names, never personal identifiers.",
     privacyText2: "Google AdSense, Google Analytics, or similar services may be added later and may use cookies or advertising identifiers.",
     privacyText3: "This site may be hosted on Cloudflare Pages. Hosting providers may process standard server logs for security and reliability.",
     footer: "Menu Rush is a lightweight food suggestion tool.", footerPrivacy: "Privacy Policy",
     insight: "{meal} picks for {time}.", region: "{region} dining culture", ready: "READY", running: "PICKING", done: "SELECTED", candidateCount: "{count} menus",
-    imageEyebrow: "Image search", imageTitle: "Recommended menu images", imageProviders: "Unsplash + Pexels", imageEmpty: "Related images appear after a menu is selected.", imageLoading: "Searching Unsplash and Pexels for menu images.", imageUnavailable: "Unsplash or Pexels API configuration is required.", imageError: "Images could not be loaded.", openNewWindow: "Open in a new window",
+    imageEyebrow: "Related image search", imageTitle: "Recommended menu images", imageProviders: "Unsplash + Pexels", imageEmpty: "Related images appear after a menu is selected.", imageLoading: "Searching Unsplash and Pexels for menu images.", imageUnavailable: "Unsplash or Pexels API configuration is required.", imageError: "Images could not be loaded.", openNewWindow: "Open in a new window",
   },
 };
 
@@ -149,7 +149,7 @@ const DISH_TRANSLATIONS = {
   },
 };
 
-const TRANSLATION_CACHE_VERSION = "v5";
+const TRANSLATION_CACHE_VERSION = "v6";
 const TRANSLATION_SEPARATOR = "\n[[[MENU_RUSH_SPLIT]]]\n";
 const API_LANGUAGE_CODES = { zh: "zh-CN", he: "iw" };
 const dishTranslationsByLocale = new Map();
