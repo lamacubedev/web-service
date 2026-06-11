@@ -367,28 +367,35 @@ h3 {
 }
 
 .result-box {
-  width: 100%;
-  min-height: 110px;
-  display: grid;
-  gap: 4px;
-  align-content: center;
+  display: flex;
+  width: min(100%, 720px);
+  min-height: 64px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
-  padding: 18px 22px;
+  padding: 12px 14px 12px 18px;
   box-shadow: 0 10px 40px rgba(25, 37, 31, 0.07);
 }
 
-.recommendation-row {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.72fr) minmax(360px, 1.28fr);
-  gap: 10px;
-  width: min(100%, 720px);
-  align-items: stretch;
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 .image-results {
+  grid-column: 1 / -1;
   min-width: 0;
+  width: 100%;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--surface);
@@ -425,8 +432,11 @@ h3 {
 
 .image-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(90px, 1fr);
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: thin;
 }
 
 .image-result-link {
@@ -485,24 +495,15 @@ h3 {
   }
 }
 
-.result-box span,
 .result-box small {
   color: var(--muted);
 }
 
-.result-box strong {
-  font-size: 2rem;
-  line-height: 1.18;
-  white-space: nowrap;
-  word-break: keep-all;
-  overflow: hidden;
-}
-
 .share-actions {
   display: flex;
+  flex: none;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
 }
 
 .share-button,
@@ -756,9 +757,6 @@ h3 {
     grid-template-columns: 1fr;
   }
 
-  .recommendation-row {
-    grid-template-columns: minmax(0, 0.8fr) minmax(280px, 1.2fr);
-  }
 }
 
 @media (max-width: 560px) {
@@ -789,12 +787,18 @@ h3 {
     height: 270px;
   }
 
-  .recommendation-row {
-    grid-template-columns: 1fr;
-  }
-
   .image-grid {
     gap: 6px;
+  }
+
+  .result-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .share-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
   }
 
   .tag-cloud-scene {

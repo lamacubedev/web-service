@@ -116,30 +116,28 @@
               <span></span><span></span><span></span><span></span><span></span>
             </div>
           </div>
-          <div class="recommendation-row">
-            <div class="result-box" aria-live="polite">
-              <span data-i18n="resultLabel">추천 메뉴</span>
-              <strong id="resultText" data-fit-text data-fit-min="18">-</strong>
-              <small id="timeInsight"></small>
-              <div class="share-actions">
-                <button class="share-button" id="shareButton" type="button" data-i18n="shareButton" disabled>결과 공유</button>
-                <button class="copy-button" id="copyButton" type="button" data-i18n="copyButton">링크 복사</button>
-              </div>
-              <small class="share-feedback" id="shareFeedback" role="status"></small>
+          <div class="result-box">
+            <span class="visually-hidden" id="resultText" aria-live="polite">-</span>
+            <small id="timeInsight"></small>
+            <div class="share-actions">
+              <button class="share-button" id="shareButton" type="button" data-i18n="shareButton" disabled>결과 공유</button>
+              <button class="copy-button" id="copyButton" type="button" data-i18n="copyButton">링크 복사</button>
             </div>
-            <section class="image-results" id="imageResults" aria-labelledby="imageResultsTitle">
-              <div class="image-results-heading">
-                <div>
-                  <span data-i18n="imageEyebrow">이미지 검색</span>
-                  <h2 id="imageResultsTitle" data-i18n="imageTitle">추천 메뉴 이미지</h2>
-                </div>
-                <span class="image-provider-label" data-i18n="imageProviders">Unsplash + Pexels</span>
-              </div>
-              <div class="image-grid" id="imageGrid" aria-live="polite"></div>
-              <p class="image-status" id="imageStatus" data-i18n="imageEmpty">메뉴가 결정되면 관련 이미지가 표시됩니다.</p>
-            </section>
+            <small class="visually-hidden" id="shareFeedback" role="status"></small>
           </div>
         </div>
+
+        <section class="image-results" id="imageResults" aria-labelledby="imageResultsTitle">
+          <div class="image-results-heading">
+            <div>
+              <span data-i18n="imageEyebrow">이미지 검색</span>
+              <h2 id="imageResultsTitle" data-i18n="imageTitle">추천 메뉴 이미지</h2>
+            </div>
+            <span class="image-provider-label" data-i18n="imageProviders">Unsplash + Pexels</span>
+          </div>
+          <div class="image-grid" id="imageGrid" aria-live="polite"></div>
+          <p class="image-status" id="imageStatus" data-i18n="imageEmpty">메뉴가 결정되면 관련 이미지가 표시됩니다.</p>
+        </section>
       </section>
 
       <section class="content-section" id="how" aria-labelledby="howTitle">
